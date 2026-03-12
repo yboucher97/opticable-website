@@ -2,10 +2,11 @@
 import json
 from datetime import date
 import shutil
+from PIL import Image
 
 root = Path(__file__).resolve().parent
 SITE_URL = 'https://opticable.ca'
-ASSET_VER = '20260312g'
+ASSET_VER = '20260312j'
 LOGO_LOCKUP_URL = f'/assets/opticable-logo.png?v={ASSET_VER}'
 LOGO_MARK_URL = f'/assets/logo-mark.svg?v={ASSET_VER}'
 STYLES_URL = f'/assets/styles.css?v={ASSET_VER}'
@@ -31,23 +32,35 @@ HOME_CAMERA_DUAL_URL = f'/assets/home-camera-dual.jpg?v={ASSET_VER}'
 HOME_PHONE_URL = f'/assets/home-phone.jpg?v={ASSET_VER}'
 LOGO_LOCKUP_WIDTH = 1600
 LOGO_LOCKUP_HEIGHT = 687
-HOME_RACK_WIDTH = 1200
-HOME_RACK_HEIGHT = 684
-HOME_WIFI_WIDTH = 560
-HOME_WIFI_HEIGHT = 698
-HOME_INTERCOM_WIDTH = 420
-HOME_INTERCOM_HEIGHT = 420
-HOME_CABLING_WIDTH = 360
-HOME_CABLING_HEIGHT = 450
-HOME_CAMERA_DUAL_WIDTH = 360
-HOME_CAMERA_DUAL_HEIGHT = 360
-HOME_PHONE_WIDTH = 420
-HOME_PHONE_HEIGHT = 224
+HOME_RACK_WIDTH = 1800
+HOME_RACK_HEIGHT = 1026
+HOME_WIFI_WIDTH = 960
+HOME_WIFI_HEIGHT = 1197
+HOME_INTERCOM_WIDTH = 800
+HOME_INTERCOM_HEIGHT = 800
+HOME_CABLING_WIDTH = 201
+HOME_CABLING_HEIGHT = 251
+HOME_CAMERA_DUAL_WIDTH = 225
+HOME_CAMERA_DUAL_HEIGHT = 225
+HOME_PHONE_WIDTH = 307
+HOME_PHONE_HEIGHT = 164
 WEBSITE_ID = f'{SITE_URL}/#website'
 BUSINESS_ID = f'{SITE_URL}/#business'
 GENERAL_INQUIRY_LABELS = {'General inquiries', 'Renseignements généraux', 'Renseignements generaux'}
 PROJECT_REQUEST_LABELS = {'Project requests', 'Demandes de soumission', 'Demandes de projet'}
 PHONE_LABELS = {'Office phone', 'Téléphone du bureau', 'Telephone du bureau'}
+LIGHTBOX_UI = {
+    'en': {
+        'open': 'View larger image',
+        'close': 'Close image viewer',
+        'dialog': 'Image viewer',
+    },
+    'fr': {
+        'open': "Agrandir l'image",
+        'close': "Fermer l'image agrandie",
+        'dialog': "Visionneuse d'image",
+    },
+}
 OPENING_HOURS_SPEC = [
     {'@type': 'OpeningHoursSpecification', 'dayOfWeek': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], 'opens': '08:00', 'closes': '17:00'},
     {'@type': 'OpeningHoursSpecification', 'dayOfWeek': ['Saturday', 'Sunday'], 'opens': '10:00', 'closes': '16:00'},
@@ -64,6 +77,53 @@ AREA_SERVED_SCHEMA = [
     {'@type': 'AdministrativeArea', 'name': 'Monteregie'},
     {'@type': 'City', 'name': 'Quebec City'},
 ]
+
+IMAGE_RESAMPLING = getattr(Image, 'Resampling', Image)
+HOME_SOURCE_DIR = root / 'Images' / 'home-sources'
+HOME_IMAGE_EXPORTS = (
+    {
+        'source': HOME_SOURCE_DIR / 'network-rack.png',
+        'target': root / 'assets' / 'home-rack.jpg',
+        'resize': (HOME_RACK_WIDTH, HOME_RACK_HEIGHT),
+        'format': 'JPEG',
+        'quality': 90,
+    },
+    {
+        'source': HOME_SOURCE_DIR / 'cablep1.jpg',
+        'target': root / 'assets' / 'home-cabling.jpg',
+        'resize': (HOME_CABLING_WIDTH, HOME_CABLING_HEIGHT),
+        'format': 'JPEG',
+        'quality': 95,
+    },
+    {
+        'source': HOME_SOURCE_DIR / 'u-ceiling.webp',
+        'target': root / 'assets' / 'home-wifi.webp',
+        'resize': (HOME_WIFI_WIDTH, HOME_WIFI_HEIGHT),
+        'format': 'WEBP',
+        'quality': 92,
+    },
+    {
+        'source': HOME_SOURCE_DIR / 'intercom-side.webp',
+        'target': root / 'assets' / 'home-intercom.webp',
+        'resize': (HOME_INTERCOM_WIDTH, HOME_INTERCOM_HEIGHT),
+        'format': 'WEBP',
+        'quality': 92,
+    },
+    {
+        'source': HOME_SOURCE_DIR / 'g5-dualmount.jpg',
+        'target': root / 'assets' / 'home-camera-dual.jpg',
+        'resize': (HOME_CAMERA_DUAL_WIDTH, HOME_CAMERA_DUAL_HEIGHT),
+        'format': 'JPEG',
+        'quality': 95,
+    },
+    {
+        'source': HOME_SOURCE_DIR / 'uphone1.jpg',
+        'target': root / 'assets' / 'home-phone.jpg',
+        'resize': (HOME_PHONE_WIDTH, HOME_PHONE_HEIGHT),
+        'format': 'JPEG',
+        'quality': 95,
+    },
+)
 
 for name in ('en', 'fr'):
     shutil.rmtree(root / name, ignore_errors=True)
@@ -203,6 +263,20 @@ T['en'].update({
     'cookie_banner_title': 'Cookie notice',
     'cookie_banner_copy': 'This site may use technical cookies or similar technologies through services such as Cloudflare or Zoho when needed to deliver and protect the site.',
     'cookie_banner_accept': 'Accept',
+    'thanks': 'Thank you',
+    'thanks_title': 'Thank You | Quote Request Received | Opticable',
+    'thanks_desc': 'Thank you for your quote request. Opticable will review the information submitted and follow up to discuss your project needs.',
+    'thanks_h1': 'Thank you. Your quote request has been sent.',
+    'thanks_intro': 'We received your request and will review the details provided for your camera, access control, intercom, WiFi, cabling, fiber, or network project.',
+    'thanks_panel_title': 'What happens next',
+    'thanks_panel_copy': 'Our team reviews the project scope, property type, and timeline before following up by email or phone.',
+    'thanks_steps': [
+        'Review the systems, services, and building details you submitted.',
+        'Confirm scope, timing, and any site-visit requirements.',
+        'Follow up with the next step for pricing, planning, or coordination.',
+    ],
+    'thanks_return_home': 'Back to home',
+    'thanks_view_services': 'View services',
     'home_title': 'Commercial Technology Infrastructure Contractor | Cameras, Access Control, WiFi | Opticable',
     'home_desc': 'Opticable installs security cameras, access control, intercoms, commercial WiFi, structured cabling, fiber optics, network infrastructure, and IP phone systems for commercial properties.',
     'home_h1': 'Commercial technology specialists for cameras, secure entry, WiFi, and connected building systems.',
@@ -316,6 +390,20 @@ T['fr'].update({
     'cookie_banner_title': 'Avis relatif aux cookies',
     'cookie_banner_copy': "Ce site peut utiliser des cookies techniques ou des technologies similaires via des services comme Cloudflare ou Zoho lorsqu'ils sont nécessaires pour livrer et protéger le site.",
     'cookie_banner_accept': 'Accepter',
+    'thanks': 'Merci',
+    'thanks_title': 'Merci | Demande de soumission reçue | Opticable',
+    'thanks_desc': "Merci pour votre demande de soumission. Opticable examinera les renseignements transmis et fera un suivi pour discuter de votre projet.",
+    'thanks_h1': 'Merci. Votre demande de soumission a été envoyée.',
+    'thanks_intro': "Nous avons bien reçu votre demande et nous allons examiner les détails transmis pour votre projet de caméras, contrôle d'accès, intercom, WiFi, câblage, fibre ou réseau.",
+    'thanks_panel_title': 'Prochaine étape',
+    'thanks_panel_copy': "Notre équipe analyse la portée du projet, le type d'immeuble et l'échéancier avant de faire un suivi par courriel ou par téléphone.",
+    'thanks_steps': [
+        'Vérifier les systèmes, services et détails du bâtiment transmis.',
+        "Confirmer la portée, les délais et le besoin d'une visite de site.",
+        'Revenir vers vous avec la prochaine étape pour la soumission, la planification ou la coordination.',
+    ],
+    'thanks_return_home': "Retour à l'accueil",
+    'thanks_view_services': 'Voir les services',
     'placeholder': "Coordonnées pour les demandes générales, les soumissions et les visites des lieux.",
     'form_note': "Formulaire de démonstration. Reliez-le à une boîte courriel, à un CRM ou à votre outil de formulaires avant la mise en ligne.",
     'success': "Merci, {name}. Votre demande peut maintenant être acheminée vers une boîte courriel ou un CRM en production.",
@@ -762,8 +850,8 @@ secondary_order = [
 ]
 order = primary_order + secondary_order
 base_routes = {
-    'en': {'home': '/en/', 'services': '/en/services/', 'industries': '/en/industries/', 'about': '/en/about/', 'faq': '/en/faq/', 'contact': '/en/contact/', 'privacy': '/en/privacy/'},
-    'fr': {'home': '/fr/', 'services': '/fr/services/', 'industries': '/fr/secteurs/', 'about': '/fr/a-propos/', 'faq': '/fr/faq/', 'contact': '/fr/contact/', 'privacy': '/fr/confidentialite/'},
+    'en': {'home': '/en/', 'services': '/en/services/', 'industries': '/en/industries/', 'about': '/en/about/', 'faq': '/en/faq/', 'contact': '/en/contact/', 'privacy': '/en/privacy/', 'thanks': '/en/thank-you/'},
+    'fr': {'home': '/', 'services': '/fr/services/', 'industries': '/fr/secteurs/', 'about': '/fr/a-propos/', 'faq': '/fr/faq/', 'contact': '/fr/contact/', 'privacy': '/fr/confidentialite/', 'thanks': '/fr/merci/'},
 }
 routes = {k: dict(v) for k, v in base_routes.items()}
 for key in order:
@@ -810,6 +898,64 @@ if (cookieBanner && cookieAccept) {
       window.localStorage.setItem(cookieBannerKey, 'accepted');
     } catch (error) {}
     cookieBanner.hidden = true;
+  });
+}
+const lightbox = document.querySelector('[data-image-lightbox]');
+const lightboxImage = lightbox?.querySelector('[data-lightbox-image]');
+const lightboxCaption = lightbox?.querySelector('[data-lightbox-caption]');
+const lightboxClose = lightbox?.querySelector('[data-lightbox-close]');
+let lastLightboxTrigger = null;
+if (lightbox && lightboxImage && lightboxCaption && lightboxClose) {
+  const closeLightbox = () => {
+    if (lightbox.hidden) return;
+    lightbox.hidden = true;
+    document.body.classList.remove('lightbox-open');
+    lightboxImage.removeAttribute('src');
+    lightboxImage.alt = '';
+    lightboxImage.style.removeProperty('--lightbox-image-width');
+    lightboxImage.style.removeProperty('--lightbox-image-height');
+    lightboxCaption.textContent = '';
+    if (lastLightboxTrigger) {
+      lastLightboxTrigger.focus();
+      lastLightboxTrigger = null;
+    }
+  };
+  document.querySelectorAll('[data-lightbox-trigger]').forEach((trigger) => {
+    trigger.addEventListener('click', (event) => {
+      const src = trigger.getAttribute('data-lightbox-src');
+      if (!src) return;
+      event.preventDefault();
+      lastLightboxTrigger = trigger;
+      lightboxImage.src = src;
+      lightboxImage.alt = trigger.getAttribute('data-lightbox-alt') || '';
+      const lightboxWidth = trigger.getAttribute('data-lightbox-width');
+      const lightboxHeight = trigger.getAttribute('data-lightbox-height');
+      if (lightboxWidth) {
+        lightboxImage.style.setProperty('--lightbox-image-width', lightboxWidth + 'px');
+      } else {
+        lightboxImage.style.removeProperty('--lightbox-image-width');
+      }
+      if (lightboxHeight) {
+        lightboxImage.style.setProperty('--lightbox-image-height', lightboxHeight + 'px');
+      } else {
+        lightboxImage.style.removeProperty('--lightbox-image-height');
+      }
+      lightboxCaption.textContent = trigger.getAttribute('data-lightbox-caption') || lightboxImage.alt;
+      lightbox.hidden = false;
+      document.body.classList.add('lightbox-open');
+      lightboxClose.focus();
+    });
+  });
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (event) => {
+    if (event.target === lightbox) {
+      closeLightbox();
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !lightbox.hidden) {
+      closeLightbox();
+    }
   });
 }
 document.querySelectorAll('[data-demo-form]').forEach((form) => {
@@ -994,7 +1140,7 @@ main section+section{
 .hero-media-main-image{
   width:100%;
   height:auto;
-  aspect-ratio:1200/684;
+  aspect-ratio:1800/1026;
   object-fit:cover;
 }
 .hero-media-caption{
@@ -1165,6 +1311,88 @@ main section+section{
   gap:12px;
   align-items:center;
 }
+.image-lightbox-trigger{
+  display:block;
+  width:100%;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:inherit;
+  text-align:inherit;
+  cursor:zoom-in;
+}
+.image-lightbox-trigger img{
+  transition:transform .22s ease,filter .22s ease;
+}
+.image-lightbox-trigger:hover img,
+.image-lightbox-trigger:focus-visible img{
+  transform:scale(1.02);
+  filter:saturate(1.04);
+}
+.hero-media-frame .image-lightbox-trigger,
+.hero-media-thumb .image-lightbox-trigger{
+  height:100%;
+}
+.hero-media-thumb .image-lightbox-trigger img{
+  height:100%;
+}
+.lightbox-overlay{
+  position:fixed;
+  inset:0;
+  z-index:130;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  background:rgba(13,22,17,.82);
+  backdrop-filter:blur(10px);
+}
+.lightbox-overlay[hidden]{
+  display:none;
+}
+.lightbox-dialog{
+  position:relative;
+  width:min(1120px,100%);
+  max-height:100%;
+  display:grid;
+  gap:14px;
+}
+.lightbox-stage{
+  margin:0;
+  display:grid;
+  gap:12px;
+}
+.lightbox-image{
+  width:auto;
+  max-width:min(100%,var(--lightbox-image-width,100%));
+  max-height:min(82vh,var(--lightbox-image-height,920px));
+  object-fit:contain;
+  border-radius:24px;
+  background:rgba(255,255,255,.98);
+  box-shadow:0 24px 54px rgba(0,0,0,.28);
+  justify-self:center;
+}
+.lightbox-caption{
+  margin:0;
+  color:#f3f7f4;
+  font-size:.98rem;
+  line-height:1.6;
+}
+.lightbox-close{
+  justify-self:end;
+  width:48px;
+  min-width:48px;
+  min-height:48px;
+  padding:0;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:999px;
+  background:rgba(18,28,22,.82);
+  color:#fff;
+  font-size:1.9rem;
+  line-height:1;
+}
+.lightbox-open{
+  overflow:hidden;
+}
 .privacy-grid{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -1186,6 +1414,9 @@ main section+section{
 }
 @media (max-width:1100px){
   .hero,.page-hero,.contact-layout,.cta-band,.gateway-panel,.two-col,.footer-grid{
+    grid-template-columns:1fr;
+  }
+  .hero.hero-media-layout{
     grid-template-columns:1fr;
   }
   .hero-points,.grid-2{
@@ -1213,12 +1444,18 @@ main section+section{
     font-size:clamp(1.62rem,4.8vw,1.98rem);
   }
   .cookie-banner{
-    right:16px;
-    bottom:16px;
-    width:min(100vw - 24px,460px);
+    position:static;
+    right:auto;
+    bottom:auto;
+    width:100%;
+    margin:0 0 18px;
+    box-shadow:var(--shadow);
   }
   .hero-media-grid{
     grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .lightbox-overlay{
+    padding:16px;
   }
 }
 @media (max-width:740px){
@@ -1235,6 +1472,12 @@ main section+section{
   .hero-media-grid{
     grid-template-columns:1fr;
   }
+  .lightbox-image{
+    border-radius:18px;
+  }
+  .lightbox-caption{
+    font-size:.92rem;
+  }
 }
 '''
 
@@ -1245,6 +1488,30 @@ def write_url(url, content):
         path = root / url.strip('/') / 'index.html'
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content.strip() + '\n', encoding='utf-8')
+
+
+def export_image_variant(spec):
+    source = spec['source']
+    if not source.exists():
+        return
+    with Image.open(source) as image:
+        if spec.get('crop'):
+            image = image.crop(spec['crop'])
+        if spec.get('resize'):
+            image.thumbnail(spec['resize'], IMAGE_RESAMPLING.LANCZOS)
+        if spec['format'] == 'JPEG':
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
+            save_kwargs = {'format': 'JPEG', 'quality': spec['quality'], 'optimize': True, 'progressive': True}
+        else:
+            save_kwargs = {'format': 'WEBP', 'quality': spec['quality'], 'method': 6}
+        spec['target'].parent.mkdir(parents=True, exist_ok=True)
+        image.save(spec['target'], **save_kwargs)
+
+
+def export_home_images():
+    for spec in HOME_IMAGE_EXPORTS:
+        export_image_variant(spec)
 
 
 def esc(text):
@@ -1283,7 +1550,7 @@ def logo_img(context):
     return f'<img {" ".join(attrs)} />'
 
 
-def content_img(src, alt, width, height, cls='', eager=False):
+def content_img(src, alt, width, height, cls='', eager=False, zoomable=False, lang='en', caption=''):
     attrs = [
         f'src="{src}"',
         f'alt="{esc(alt)}"',
@@ -1298,7 +1565,23 @@ def content_img(src, alt, width, height, cls='', eager=False):
         attrs.append('fetchpriority="high"')
     else:
         attrs.append('loading="lazy"')
-    return f'<img {" ".join(attrs)} />'
+    img_html = f'<img {" ".join(attrs)} />'
+    if not zoomable:
+        return img_html
+    ui = LIGHTBOX_UI.get(lang, LIGHTBOX_UI['en'])
+    trigger_label = f'{ui["open"]}: {alt}'
+    trigger_attrs = [
+        'class="image-lightbox-trigger"',
+        f'href="{esc(src)}"',
+        'data-lightbox-trigger',
+        f'data-lightbox-src="{esc(src)}"',
+        f'data-lightbox-alt="{esc(alt)}"',
+        f'data-lightbox-caption="{esc(caption or alt)}"',
+        f'data-lightbox-width="{width}"',
+        f'data-lightbox-height="{height}"',
+        f'aria-label="{esc(trigger_label)}"',
+    ]
+    return f'<a {" ".join(trigger_attrs)}>{img_html}</a>'
 
 
 def tel_href(phone):
@@ -1397,13 +1680,13 @@ def home_visual_panel(lang):
     visual = home_visuals[lang]
     title_html = f'<h2>{esc(visual["title"])}</h2>' if visual['title'] else ''
     cards = ''.join(
-        f'<article class="hero-media-card"><div class="hero-media-thumb">{content_img(card["src"], card["alt"], card["width"], card["height"], "hero-media-card-image")}</div><strong>{esc(card["title"])}</strong></article>'
+        f'<article class="hero-media-card"><div class="hero-media-thumb">{content_img(card["src"], card["alt"], card["width"], card["height"], "hero-media-card-image", zoomable=True, lang=lang, caption=card["title"])}</div><strong>{esc(card["title"])}</strong></article>'
         for card in visual['cards']
     )
     return (
         f'<aside class="hero-panel hero-media-panel"><p class="eyebrow">{esc(visual["eyebrow"])}</p>'
         f'{title_html}'
-        f'<figure class="hero-media-main"><div class="hero-media-frame">{content_img(HOME_RACK_URL, visual["main_alt"], HOME_RACK_WIDTH, HOME_RACK_HEIGHT, "hero-media-main-image", eager=True)}</div>'
+        f'<figure class="hero-media-main"><div class="hero-media-frame">{content_img(HOME_RACK_URL, visual["main_alt"], HOME_RACK_WIDTH, HOME_RACK_HEIGHT, "hero-media-main-image", eager=True, zoomable=True, lang=lang, caption=visual["main_title"])}</div>'
         f'<figcaption class="hero-media-caption"><strong>{esc(visual["main_title"])}</strong><span>{esc(visual["main_copy"])}</span></figcaption></figure>'
         f'<div class="hero-media-grid">{cards}</div></aside>'
     )
@@ -1497,6 +1780,17 @@ def cookie_banner(lang):
     )
 
 
+def image_lightbox(lang):
+    ui = LIGHTBOX_UI.get(lang, LIGHTBOX_UI['en'])
+    return (
+        f'<div class="lightbox-overlay" data-image-lightbox hidden>'
+        f'<div class="lightbox-dialog" role="dialog" aria-modal="true" aria-label="{esc(ui["dialog"])}">'
+        f'<button class="lightbox-close" type="button" data-lightbox-close aria-label="{esc(ui["close"])}">&times;</button>'
+        f'<figure class="lightbox-stage"><img class="lightbox-image" data-lightbox-image alt="" /><figcaption class="lightbox-caption" data-lightbox-caption></figcaption></figure>'
+        f'</div></div>'
+    )
+
+
 def footer(lang):
     t = T[lang]
     quick = ''.join(f'<li><a href="{routes[lang][k]}">{esc(t[k])}</a></li>' for k in ('home', 'services', 'about', 'contact', 'privacy'))
@@ -1515,7 +1809,33 @@ def page(lang, key, current, title, desc, body, faq_items=None, service_name=Non
     canonical_url = absolute_url(routes[lang][key])
     default_url = absolute_url(default_route(key))
     og_image_url = absolute_url(LOGO_LOCKUP_URL)
-    return f'<!doctype html><html lang="{language_tag(lang)}"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>{esc(title)}</title><meta name="description" content="{esc(desc)}" /><meta name="robots" content="{esc(robots)}" /><meta name="theme-color" content="#153628" /><link rel="canonical" href="{canonical_url}" /><link rel="alternate" hreflang="{language_tag("en")}" href="{absolute_url(routes["en"][key])}" /><link rel="alternate" hreflang="{language_tag("fr")}" href="{absolute_url(routes["fr"][key])}" /><link rel="alternate" hreflang="x-default" href="{default_url}" /><meta property="og:type" content="website" /><meta property="og:site_name" content="Opticable" /><meta property="og:locale" content="{t["locale"]}" /><meta property="og:title" content="{esc(title)}" /><meta property="og:description" content="{esc(desc)}" /><meta property="og:url" content="{canonical_url}" /><meta property="og:image" content="{og_image_url}" /><meta property="og:image:alt" content="Opticable logo" /><meta property="og:image:width" content="{LOGO_LOCKUP_WIDTH}" /><meta property="og:image:height" content="{LOGO_LOCKUP_HEIGHT}" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="{esc(title)}" /><meta name="twitter:description" content="{esc(desc)}" /><meta name="twitter:image" content="{og_image_url}" /><meta name="twitter:image:alt" content="Opticable logo" /><link rel="icon" type="image/svg+xml" href="{LOGO_MARK_URL}" /><link rel="stylesheet" href="{STYLES_URL}" /><script type="application/ld+json">{schema(lang, key, title, desc, faq_items, service_name, breadcrumb_items)}</script></head><body><a class="skip-link" href="#content">{esc(t["skip"])}</a><div class="site-shell">{header(lang, current, key)}<main id="content">{body}</main>{footer(lang)}</div>{cookie_banner(lang)}<script src="{SCRIPT_URL}" defer></script></body></html>'
+    return f'<!doctype html><html lang="{language_tag(lang)}"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>{esc(title)}</title><meta name="description" content="{esc(desc)}" /><meta name="robots" content="{esc(robots)}" /><meta name="theme-color" content="#153628" /><link rel="canonical" href="{canonical_url}" /><link rel="alternate" hreflang="{language_tag("en")}" href="{absolute_url(routes["en"][key])}" /><link rel="alternate" hreflang="{language_tag("fr")}" href="{absolute_url(routes["fr"][key])}" /><link rel="alternate" hreflang="x-default" href="{default_url}" /><meta property="og:type" content="website" /><meta property="og:site_name" content="Opticable" /><meta property="og:locale" content="{t["locale"]}" /><meta property="og:title" content="{esc(title)}" /><meta property="og:description" content="{esc(desc)}" /><meta property="og:url" content="{canonical_url}" /><meta property="og:image" content="{og_image_url}" /><meta property="og:image:alt" content="Opticable logo" /><meta property="og:image:width" content="{LOGO_LOCKUP_WIDTH}" /><meta property="og:image:height" content="{LOGO_LOCKUP_HEIGHT}" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="{esc(title)}" /><meta name="twitter:description" content="{esc(desc)}" /><meta name="twitter:image" content="{og_image_url}" /><meta name="twitter:image:alt" content="Opticable logo" /><link rel="icon" type="image/svg+xml" href="{LOGO_MARK_URL}" /><link rel="stylesheet" href="{STYLES_URL}" /><script type="application/ld+json">{schema(lang, key, title, desc, faq_items, service_name, breadcrumb_items)}</script></head><body><a class="skip-link" href="#content">{esc(t["skip"])}</a><div class="site-shell">{header(lang, current, key)}{cookie_banner(lang)}<main id="content">{body}</main>{footer(lang)}</div>{image_lightbox(lang)}<script src="{SCRIPT_URL}" defer></script></body></html>'
+
+
+def legacy_redirect_html(target, title, desc, lang='fr'):
+    return (
+        f'<!doctype html><html lang="{language_tag(lang)}"><head><meta charset="UTF-8" />'
+        f'<meta http-equiv="refresh" content="0; url={target}" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />'
+        f'<title>{esc(title)}</title><meta name="description" content="{esc(desc)}" />'
+        f'<meta name="robots" content="noindex, follow" /><meta name="theme-color" content="#153628" />'
+        f'<link rel="canonical" href="{absolute_url(target)}" />'
+        f'<link rel="alternate" hreflang="{language_tag("fr")}" href="{absolute_url(routes["fr"]["home"])}" />'
+        f'<link rel="alternate" hreflang="{language_tag("en")}" href="{absolute_url(routes["en"]["home"])}" />'
+        f'<link rel="alternate" hreflang="x-default" href="{absolute_url(default_route("home"))}" />'
+        f'<meta property="og:type" content="website" /><meta property="og:site_name" content="Opticable" />'
+        f'<meta property="og:locale" content="{T[lang]["locale"]}" /><meta property="og:title" content="{esc(title)}" />'
+        f'<meta property="og:description" content="{esc(desc)}" /><meta property="og:url" content="{absolute_url(target)}" />'
+        f'<meta property="og:image" content="{absolute_url(LOGO_LOCKUP_URL)}" /><meta property="og:image:alt" content="Opticable logo" />'
+        f'<meta property="og:image:width" content="{LOGO_LOCKUP_WIDTH}" /><meta property="og:image:height" content="{LOGO_LOCKUP_HEIGHT}" />'
+        f'<meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="{esc(title)}" />'
+        f'<meta name="twitter:description" content="{esc(desc)}" /><meta name="twitter:image" content="{absolute_url(LOGO_LOCKUP_URL)}" />'
+        f'<meta name="twitter:image:alt" content="Opticable logo" /><link rel="icon" type="image/svg+xml" href="{LOGO_MARK_URL}" />'
+        f'<link rel="stylesheet" href="{STYLES_URL}" /></head><body><div class="gateway-shell"><section class="gateway-panel">'
+        f'<div><div class="gateway-brand">{logo_img("gateway")}</div><p>{esc(T[lang]["company"])}</p>'
+        f'<p class="eyebrow">{esc("Redirection" if lang == "fr" else "Redirect")}</p>'
+        f'<h1>{esc(title)}</h1><p>{esc(desc)}</p></div><div class="hero-actions">'
+        f'<a class="button button-primary" href="{target}">{esc("Continuer" if lang == "fr" else "Continue")}</a></div></section></div></body></html>'
+    )
 
 
 def process_section(lang):
@@ -1675,6 +1995,16 @@ for lang in ('en', 'fr'):
     )
     write_url(routes[lang]['contact'], page(lang, 'contact', 'contact', t['contact_title'], t['contact_desc'], contact_body, breadcrumb_items=contact_breadcrumbs))
 
+    thanks_breadcrumbs = [(t['home'], routes[lang]['home']), (t['thanks'], routes[lang]['thanks'])]
+    thanks_steps_html = ''.join(f'<li>{esc(item)}</li>' for item in t['thanks_steps'])
+    thanks_body = (
+        f'{breadcrumb_nav(thanks_breadcrumbs)}'
+        f'<section class="page-hero contact-hero"><div class="page-hero-copy"><p class="eyebrow">{esc(t["thanks"])}</p><h1>{esc(t["thanks_h1"])}</h1><p>{esc(t["thanks_intro"])}</p>'
+        f'<div class="page-hero-actions"><a class="button button-primary" href="{routes[lang]["home"]}">{esc(t["thanks_return_home"])}</a><a class="button button-secondary" href="{routes[lang]["services"]}">{esc(t["thanks_view_services"])}</a></div></div></section>'
+        f'<section class="two-col"><div class="contact-panel"><p class="eyebrow">{esc(t["thanks"])}</p><h2>{esc(t["thanks_panel_title"])}</h2><p>{esc(t["thanks_panel_copy"])}</p><ul class="check-list">{thanks_steps_html}</ul></div><div class="contact-panel"><p class="eyebrow">{esc(t["contact"])}</p><h2>{esc(t["footer_contact_title"])}</h2><div class="detail-list">{details}</div></div></section>'
+    )
+    write_url(routes[lang]['thanks'], page(lang, 'thanks', 'contact', t['thanks_title'], t['thanks_desc'], thanks_body, breadcrumb_items=thanks_breadcrumbs, robots='noindex, nofollow'))
+
     privacy_cards_html = ''.join(card(title, copy) for title, copy in t['privacy_cards'])
     privacy_choices_html = ''.join(f'<li>{esc(item)}</li>' for item in t['privacy_choices'])
     privacy_breadcrumbs = [(t['home'], routes[lang]['home']), (t['privacy'], routes[lang]['privacy'])]
@@ -1724,11 +2054,10 @@ for lang in ('en', 'fr'):
         )
         write_url(routes[lang][key], page(lang, key, 'services', s['title'], s['desc'], body, service_name=s['name'], breadcrumb_items=service_breadcrumbs))
 
-write_url('/', '<!doctype html><html lang="' + language_tag('fr') + '"><head><meta charset="UTF-8" /><meta http-equiv="refresh" content="0; url=/fr/" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Opticable | Redirection vers le site français</title><meta name="description" content="Redirection vers la version française principale du site Opticable." /><meta name="robots" content="noindex, follow" /><meta name="theme-color" content="#153628" /><link rel="canonical" href="' + absolute_url('/') + '" /><link rel="alternate" hreflang="' + language_tag('fr') + '" href="' + absolute_url('/fr/') + '" /><link rel="alternate" hreflang="' + language_tag('en') + '" href="' + absolute_url('/en/') + '" /><link rel="alternate" hreflang="x-default" href="' + absolute_url('/') + '" /><meta property="og:type" content="website" /><meta property="og:site_name" content="Opticable" /><meta property="og:locale" content="' + T['fr']['locale'] + '" /><meta property="og:title" content="Opticable | Redirection vers le site français" /><meta property="og:description" content="Redirection vers la version française principale du site Opticable." /><meta property="og:url" content="' + absolute_url('/') + '" /><meta property="og:image" content="' + absolute_url(LOGO_LOCKUP_URL) + '" /><meta property="og:image:alt" content="Opticable logo" /><meta property="og:image:width" content="' + str(LOGO_LOCKUP_WIDTH) + '" /><meta property="og:image:height" content="' + str(LOGO_LOCKUP_HEIGHT) + '" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Opticable | Redirection vers le site français" /><meta name="twitter:description" content="Redirection vers la version française principale du site Opticable." /><meta name="twitter:image" content="' + absolute_url(LOGO_LOCKUP_URL) + '" /><meta name="twitter:image:alt" content="Opticable logo" /><link rel="icon" type="image/svg+xml" href="' + LOGO_MARK_URL + '" /><link rel="stylesheet" href="' + STYLES_URL + '" /></head><body><div class="gateway-shell"><section class="gateway-panel"><div><div class="gateway-brand">' + logo_img('gateway') + '</div><p>' + esc(T['fr']['company']) + '</p><p class="eyebrow">Version principale</p><h1>Redirection vers le site français</h1><p>La version française est maintenant la version principale du site. Si la redirection ne se fait pas automatiquement, utilisez les liens ci-dessous.</p></div><div class="language-cards"><article class="language-card"><h2>Français</h2><p>Accéder à la version principale du site.</p><a class="button button-primary" href="/fr/">Entrer sur le site français</a></article><article class="language-card"><h2>English</h2><p>Open the English version of the site.</p><a class="button button-secondary" href="/en/">Enter English site</a></article></div></section></div></body></html>')
+write_url('/fr/', legacy_redirect_html('/', 'Redirection vers la page d accueil française', "La page d accueil française est maintenant servie directement à la racine du site.", lang='fr'))
 (root / 'assets').mkdir(exist_ok=True)
+export_home_images()
 (root / 'assets' / 'styles.css').write_text(css.strip() + '\n', encoding='utf-8')
 (root / 'assets' / 'site.js').write_text(js.strip() + '\n', encoding='utf-8')
 (root / 'robots.txt').write_text('User-agent: *\nAllow: /\nDisallow: /.playwright-cli/\nDisallow: /output/\nDisallow: /__pycache__/\nSitemap: ' + absolute_url('/sitemap.xml') + '\n', encoding='utf-8')
 (root / 'sitemap.xml').write_text(sitemap_xml(), encoding='utf-8')
-
-
