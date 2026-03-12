@@ -5,8 +5,22 @@ import shutil
 from PIL import Image
 
 root = Path(__file__).resolve().parent
+SOURCE_ASSET_ROOT = root / 'assets'
 DEPLOY_ROOT = root / 'dist'
-DEPLOY_INCLUDE = ('index.html', 'robots.txt', 'sitemap.xml', 'assets', 'en', 'fr')
+DEPLOY_ASSET_ROOT = DEPLOY_ROOT / 'assets'
+LEGACY_ROOT_BUILD_DIRS = ('en', 'fr')
+LEGACY_ROOT_BUILD_FILES = ('index.html', 'robots.txt', 'sitemap.xml', 'styles.css', 'script.js')
+STATIC_ASSET_FILES = ('logo-mark.svg', 'opticable-logo.png')
+ROOT_GENERATED_ASSET_FILES = (
+    'home-rack.jpg',
+    'home-cabling.jpg',
+    'home-wifi.webp',
+    'home-intercom.webp',
+    'home-camera-dual.jpg',
+    'home-phone.jpg',
+    'styles.css',
+    'site.js',
+)
 SITE_URL = 'https://opticable.ca'
 ASSET_VER = '20260312j'
 LOGO_LOCKUP_URL = f'/assets/opticable-logo.png?v={ASSET_VER}'
@@ -85,54 +99,47 @@ HOME_SOURCE_DIR = root / 'Images' / 'home-sources'
 HOME_IMAGE_EXPORTS = (
     {
         'source': HOME_SOURCE_DIR / 'network-rack.png',
-        'target': root / 'assets' / 'home-rack.jpg',
+        'target': DEPLOY_ASSET_ROOT / 'home-rack.jpg',
         'resize': (HOME_RACK_WIDTH, HOME_RACK_HEIGHT),
         'format': 'JPEG',
         'quality': 90,
     },
     {
         'source': HOME_SOURCE_DIR / 'cablep1.jpg',
-        'target': root / 'assets' / 'home-cabling.jpg',
+        'target': DEPLOY_ASSET_ROOT / 'home-cabling.jpg',
         'resize': (HOME_CABLING_WIDTH, HOME_CABLING_HEIGHT),
         'format': 'JPEG',
         'quality': 95,
     },
     {
         'source': HOME_SOURCE_DIR / 'u-ceiling.webp',
-        'target': root / 'assets' / 'home-wifi.webp',
+        'target': DEPLOY_ASSET_ROOT / 'home-wifi.webp',
         'resize': (HOME_WIFI_WIDTH, HOME_WIFI_HEIGHT),
         'format': 'WEBP',
         'quality': 92,
     },
     {
         'source': HOME_SOURCE_DIR / 'intercom-side.webp',
-        'target': root / 'assets' / 'home-intercom.webp',
+        'target': DEPLOY_ASSET_ROOT / 'home-intercom.webp',
         'resize': (HOME_INTERCOM_WIDTH, HOME_INTERCOM_HEIGHT),
         'format': 'WEBP',
         'quality': 92,
     },
     {
         'source': HOME_SOURCE_DIR / 'g5-dualmount.jpg',
-        'target': root / 'assets' / 'home-camera-dual.jpg',
+        'target': DEPLOY_ASSET_ROOT / 'home-camera-dual.jpg',
         'resize': (HOME_CAMERA_DUAL_WIDTH, HOME_CAMERA_DUAL_HEIGHT),
         'format': 'JPEG',
         'quality': 95,
     },
     {
         'source': HOME_SOURCE_DIR / 'uphone1.jpg',
-        'target': root / 'assets' / 'home-phone.jpg',
+        'target': DEPLOY_ASSET_ROOT / 'home-phone.jpg',
         'resize': (HOME_PHONE_WIDTH, HOME_PHONE_HEIGHT),
         'format': 'JPEG',
         'quality': 95,
     },
 )
-
-for name in ('en', 'fr'):
-    shutil.rmtree(root / name, ignore_errors=True)
-for name in ('styles.css', 'script.js'):
-    p = root / name
-    if p.exists():
-        p.unlink()
 
 T = {
     'en': {
@@ -1485,9 +1492,9 @@ main section+section{
 
 def write_url(url, content):
     if url == '/':
-        path = root / 'index.html'
+        path = DEPLOY_ROOT / 'index.html'
     else:
-        path = root / url.strip('/') / 'index.html'
+        path = DEPLOY_ROOT / url.strip('/') / 'index.html'
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content.strip() + '\n', encoding='utf-8')
 
@@ -1516,18 +1523,30 @@ def export_home_images():
         export_image_variant(spec)
 
 
-def sync_deploy_dir():
+def reset_deploy_dir():
     shutil.rmtree(DEPLOY_ROOT, ignore_errors=True)
-    DEPLOY_ROOT.mkdir(parents=True, exist_ok=True)
-    for name in DEPLOY_INCLUDE:
-        source = root / name
+    DEPLOY_ASSET_ROOT.mkdir(parents=True, exist_ok=True)
+
+
+def copy_static_assets():
+    for name in STATIC_ASSET_FILES:
+        source = SOURCE_ASSET_ROOT / name
         if not source.exists():
             continue
-        target = DEPLOY_ROOT / name
-        if source.is_dir():
-            shutil.copytree(source, target)
-        else:
-            shutil.copy2(source, target)
+        shutil.copy2(source, DEPLOY_ASSET_ROOT / name)
+
+
+def remove_legacy_root_build():
+    for name in LEGACY_ROOT_BUILD_DIRS:
+        shutil.rmtree(root / name, ignore_errors=True)
+    for name in LEGACY_ROOT_BUILD_FILES:
+        path = root / name
+        if path.exists():
+            path.unlink()
+    for name in ROOT_GENERATED_ASSET_FILES:
+        path = SOURCE_ASSET_ROOT / name
+        if path.exists():
+            path.unlink()
 
 
 def esc(text):
@@ -1953,6 +1972,13 @@ def form_section(lang):
     )
     return f'<div class="form-panel zoho-form-shell"><div id="{container_id}" class="zoho-form-embed"></div>{script}</div>'
 
+remove_legacy_root_build()
+reset_deploy_dir()
+copy_static_assets()
+export_home_images()
+(DEPLOY_ASSET_ROOT / 'styles.css').write_text(css.strip() + '\n', encoding='utf-8')
+(DEPLOY_ASSET_ROOT / 'site.js').write_text(js.strip() + '\n', encoding='utf-8')
+
 for lang in ('en', 'fr'):
     t = T[lang]
     contact_panel_title = t.get('contact_panel_title', t['contact_info_title'])
@@ -2071,10 +2097,5 @@ for lang in ('en', 'fr'):
         write_url(routes[lang][key], page(lang, key, 'services', s['title'], s['desc'], body, service_name=s['name'], breadcrumb_items=service_breadcrumbs))
 
 write_url('/fr/', legacy_redirect_html('/', 'Redirection vers la page d accueil française', "La page d accueil française est maintenant servie directement à la racine du site.", lang='fr'))
-(root / 'assets').mkdir(exist_ok=True)
-export_home_images()
-(root / 'assets' / 'styles.css').write_text(css.strip() + '\n', encoding='utf-8')
-(root / 'assets' / 'site.js').write_text(js.strip() + '\n', encoding='utf-8')
-(root / 'robots.txt').write_text('User-agent: *\nAllow: /\nDisallow: /.playwright-cli/\nDisallow: /output/\nDisallow: /__pycache__/\nSitemap: ' + absolute_url('/sitemap.xml') + '\n', encoding='utf-8')
-(root / 'sitemap.xml').write_text(sitemap_xml(), encoding='utf-8')
-sync_deploy_dir()
+(DEPLOY_ROOT / 'robots.txt').write_text('User-agent: *\nAllow: /\nDisallow: /.playwright-cli/\nDisallow: /output/\nDisallow: /__pycache__/\nSitemap: ' + absolute_url('/sitemap.xml') + '\n', encoding='utf-8')
+(DEPLOY_ROOT / 'sitemap.xml').write_text(sitemap_xml(), encoding='utf-8')
