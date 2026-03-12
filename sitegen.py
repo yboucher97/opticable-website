@@ -5,6 +5,8 @@ import shutil
 from PIL import Image
 
 root = Path(__file__).resolve().parent
+DEPLOY_ROOT = root / 'dist'
+DEPLOY_INCLUDE = ('index.html', 'robots.txt', 'sitemap.xml', 'assets', 'en', 'fr')
 SITE_URL = 'https://opticable.ca'
 ASSET_VER = '20260312j'
 LOGO_LOCKUP_URL = f'/assets/opticable-logo.png?v={ASSET_VER}'
@@ -1514,6 +1516,20 @@ def export_home_images():
         export_image_variant(spec)
 
 
+def sync_deploy_dir():
+    shutil.rmtree(DEPLOY_ROOT, ignore_errors=True)
+    DEPLOY_ROOT.mkdir(parents=True, exist_ok=True)
+    for name in DEPLOY_INCLUDE:
+        source = root / name
+        if not source.exists():
+            continue
+        target = DEPLOY_ROOT / name
+        if source.is_dir():
+            shutil.copytree(source, target)
+        else:
+            shutil.copy2(source, target)
+
+
 def esc(text):
     return (text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;'))
 
@@ -2061,3 +2077,4 @@ export_home_images()
 (root / 'assets' / 'site.js').write_text(js.strip() + '\n', encoding='utf-8')
 (root / 'robots.txt').write_text('User-agent: *\nAllow: /\nDisallow: /.playwright-cli/\nDisallow: /output/\nDisallow: /__pycache__/\nSitemap: ' + absolute_url('/sitemap.xml') + '\n', encoding='utf-8')
 (root / 'sitemap.xml').write_text(sitemap_xml(), encoding='utf-8')
+sync_deploy_dir()
