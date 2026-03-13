@@ -12,17 +12,22 @@ LEGACY_ROOT_BUILD_DIRS = ('en', 'fr')
 LEGACY_ROOT_BUILD_FILES = ('index.html', 'robots.txt', 'sitemap.xml', 'styles.css', 'script.js')
 STATIC_ASSET_FILES = ('logo-mark.svg', 'opticable-logo.png')
 ROOT_GENERATED_ASSET_FILES = (
+    'home-building.webp',
     'home-rack.jpg',
-    'home-cabling.jpg',
-    'home-wifi.webp',
-    'home-intercom.webp',
-    'home-camera-dual.jpg',
-    'home-phone.jpg',
+    'about-panel.webp',
+    'service-camera.avif',
+    'service-intercom.webp',
+    'service-cabling.webp',
+    'service-fiber.webp',
+    'service-infrastructure.webp',
+    'service-access.webp',
+    'service-wifi.webp',
+    'service-voip.webp',
     'styles.css',
     'site.js',
 )
 SITE_URL = 'https://opticable.ca'
-ASSET_VER = '20260312j'
+ASSET_VER = '20260312m'
 LOGO_LOCKUP_URL = f'/assets/opticable-logo.png?v={ASSET_VER}'
 LOGO_MARK_URL = f'/assets/logo-mark.svg?v={ASSET_VER}'
 STYLES_URL = f'/assets/styles.css?v={ASSET_VER}'
@@ -40,26 +45,41 @@ ZOHO_FORM_CONFIG = {
     },
 }
 COOKIE_BANNER_ACCEPT_KEY = 'opticable-cookie-banner-accepted'
+HOME_BUILDING_URL = f'/assets/home-building.webp?v={ASSET_VER}'
 HOME_RACK_URL = f'/assets/home-rack.jpg?v={ASSET_VER}'
-HOME_WIFI_URL = f'/assets/home-wifi.webp?v={ASSET_VER}'
-HOME_INTERCOM_URL = f'/assets/home-intercom.webp?v={ASSET_VER}'
-HOME_CABLING_URL = f'/assets/home-cabling.jpg?v={ASSET_VER}'
-HOME_CAMERA_DUAL_URL = f'/assets/home-camera-dual.jpg?v={ASSET_VER}'
-HOME_PHONE_URL = f'/assets/home-phone.jpg?v={ASSET_VER}'
+ABOUT_PANEL_URL = f'/assets/about-panel.webp?v={ASSET_VER}'
+SERVICE_CAMERA_URL = f'/assets/service-camera.avif?v={ASSET_VER}'
+SERVICE_INTERCOM_URL = f'/assets/service-intercom.webp?v={ASSET_VER}'
+SERVICE_CABLING_URL = f'/assets/service-cabling.webp?v={ASSET_VER}'
+SERVICE_FIBER_URL = f'/assets/service-fiber.webp?v={ASSET_VER}'
+SERVICE_INFRASTRUCTURE_URL = f'/assets/service-infrastructure.webp?v={ASSET_VER}'
+SERVICE_ACCESS_URL = f'/assets/service-access.webp?v={ASSET_VER}'
+SERVICE_WIFI_URL = f'/assets/service-wifi.webp?v={ASSET_VER}'
+SERVICE_VOIP_URL = f'/assets/service-voip.webp?v={ASSET_VER}'
 LOGO_LOCKUP_WIDTH = 1600
 LOGO_LOCKUP_HEIGHT = 687
+HOME_BUILDING_WIDTH = 1800
+HOME_BUILDING_HEIGHT = 1025
 HOME_RACK_WIDTH = 1800
 HOME_RACK_HEIGHT = 1026
-HOME_WIFI_WIDTH = 960
-HOME_WIFI_HEIGHT = 1197
-HOME_INTERCOM_WIDTH = 800
-HOME_INTERCOM_HEIGHT = 800
-HOME_CABLING_WIDTH = 201
-HOME_CABLING_HEIGHT = 251
-HOME_CAMERA_DUAL_WIDTH = 225
-HOME_CAMERA_DUAL_HEIGHT = 225
-HOME_PHONE_WIDTH = 307
-HOME_PHONE_HEIGHT = 164
+ABOUT_PANEL_WIDTH = 1200
+ABOUT_PANEL_HEIGHT = 1200
+SERVICE_CAMERA_WIDTH = 238
+SERVICE_CAMERA_HEIGHT = 212
+SERVICE_INTERCOM_WIDTH = 786
+SERVICE_INTERCOM_HEIGHT = 700
+SERVICE_CABLING_WIDTH = 1400
+SERVICE_CABLING_HEIGHT = 740
+SERVICE_FIBER_WIDTH = 275
+SERVICE_FIBER_HEIGHT = 183
+SERVICE_INFRASTRUCTURE_WIDTH = 1800
+SERVICE_INFRASTRUCTURE_HEIGHT = 1012
+SERVICE_ACCESS_WIDTH = 1400
+SERVICE_ACCESS_HEIGHT = 797
+SERVICE_WIFI_WIDTH = 1200
+SERVICE_WIFI_HEIGHT = 1495
+SERVICE_VOIP_WIDTH = 1400
+SERVICE_VOIP_HEIGHT = 797
 WEBSITE_ID = f'{SITE_URL}/#website'
 BUSINESS_ID = f'{SITE_URL}/#business'
 GENERAL_INQUIRY_LABELS = {'General inquiries', 'Renseignements généraux', 'Renseignements generaux'}
@@ -75,6 +95,16 @@ LIGHTBOX_UI = {
         'open': "Agrandir l'image",
         'close': "Fermer l'image agrandie",
         'dialog': "Visionneuse d'image",
+    },
+}
+CAROUSEL_UI = {
+    'en': {
+        'prev': 'Previous services',
+        'next': 'Next services',
+    },
+    'fr': {
+        'prev': 'Services précédents',
+        'next': 'Services suivants',
     },
 }
 OPENING_HOURS_SPEC = [
@@ -98,6 +128,13 @@ IMAGE_RESAMPLING = getattr(Image, 'Resampling', Image)
 HOME_SOURCE_DIR = root / 'Images' / 'home-sources'
 HOME_IMAGE_EXPORTS = (
     {
+        'source': root / 'Images' / 'source-library' / 'ai-generated' / 'gemini-building.png',
+        'target': DEPLOY_ASSET_ROOT / 'home-building.webp',
+        'resize': (HOME_BUILDING_WIDTH, HOME_BUILDING_HEIGHT),
+        'format': 'WEBP',
+        'quality': 90,
+    },
+    {
         'source': HOME_SOURCE_DIR / 'network-rack.png',
         'target': DEPLOY_ASSET_ROOT / 'home-rack.jpg',
         'resize': (HOME_RACK_WIDTH, HOME_RACK_HEIGHT),
@@ -105,39 +142,66 @@ HOME_IMAGE_EXPORTS = (
         'quality': 90,
     },
     {
-        'source': HOME_SOURCE_DIR / 'cablep1.jpg',
-        'target': DEPLOY_ASSET_ROOT / 'home-cabling.jpg',
-        'resize': (HOME_CABLING_WIDTH, HOME_CABLING_HEIGHT),
-        'format': 'JPEG',
-        'quality': 95,
-    },
-    {
-        'source': HOME_SOURCE_DIR / 'u-ceiling.webp',
-        'target': DEPLOY_ASSET_ROOT / 'home-wifi.webp',
-        'resize': (HOME_WIFI_WIDTH, HOME_WIFI_HEIGHT),
+        'source': root / 'Images' / 'source-library' / 'Gemini_Generated_Image_fipiq6fipiq6fipi.png',
+        'target': DEPLOY_ASSET_ROOT / 'about-panel.webp',
+        'resize': (ABOUT_PANEL_WIDTH, ABOUT_PANEL_HEIGHT),
         'format': 'WEBP',
         'quality': 92,
     },
     {
-        'source': HOME_SOURCE_DIR / 'intercom-side.webp',
-        'target': DEPLOY_ASSET_ROOT / 'home-intercom.webp',
-        'resize': (HOME_INTERCOM_WIDTH, HOME_INTERCOM_HEIGHT),
+        'source': root / 'Images' / 'source-library' / 'products' / 'intercom-door-station.jpeg',
+        'target': DEPLOY_ASSET_ROOT / 'service-intercom.webp',
+        'resize': (SERVICE_INTERCOM_WIDTH, SERVICE_INTERCOM_HEIGHT),
+        'format': 'WEBP',
+        'quality': 90,
+    },
+    {
+        'source': root / 'Images' / 'source-library' / 'patch-and-switch-original.png',
+        'target': DEPLOY_ASSET_ROOT / 'service-cabling.webp',
+        'resize': (SERVICE_CABLING_WIDTH, SERVICE_CABLING_HEIGHT),
+        'format': 'WEBP',
+        'quality': 90,
+    },
+    {
+        'source': root / 'Images' / 'source-library' / 'cabling' / 'cablep4.jpg',
+        'target': DEPLOY_ASSET_ROOT / 'service-fiber.webp',
+        'resize': (SERVICE_FIBER_WIDTH, SERVICE_FIBER_HEIGHT),
         'format': 'WEBP',
         'quality': 92,
     },
     {
-        'source': HOME_SOURCE_DIR / 'g5-dualmount.jpg',
-        'target': DEPLOY_ASSET_ROOT / 'home-camera-dual.jpg',
-        'resize': (HOME_CAMERA_DUAL_WIDTH, HOME_CAMERA_DUAL_HEIGHT),
-        'format': 'JPEG',
-        'quality': 95,
+        'source': root / 'Images' / 'source-library' / 'Gemini_Infra_reseau.png',
+        'target': DEPLOY_ASSET_ROOT / 'service-infrastructure.webp',
+        'resize': (SERVICE_INFRASTRUCTURE_WIDTH, SERVICE_INFRASTRUCTURE_HEIGHT),
+        'format': 'WEBP',
+        'quality': 92,
     },
     {
-        'source': HOME_SOURCE_DIR / 'uphone1.jpg',
-        'target': DEPLOY_ASSET_ROOT / 'home-phone.jpg',
-        'resize': (HOME_PHONE_WIDTH, HOME_PHONE_HEIGHT),
-        'format': 'JPEG',
-        'quality': 95,
+        'source': root / 'Images' / 'source-library' / 'Gemini_Access_Reader.png',
+        'target': DEPLOY_ASSET_ROOT / 'service-access.webp',
+        'resize': (SERVICE_ACCESS_WIDTH, SERVICE_ACCESS_HEIGHT),
+        'format': 'WEBP',
+        'quality': 90,
+    },
+    {
+        'source': root / 'Images' / 'source-library' / 'ai-generated' / 'gemini-wifi-access-point.png',
+        'target': DEPLOY_ASSET_ROOT / 'service-wifi.webp',
+        'resize': (SERVICE_WIFI_WIDTH, SERVICE_WIFI_HEIGHT),
+        'format': 'WEBP',
+        'quality': 90,
+    },
+    {
+        'source': root / 'Images' / 'source-library' / 'Gemini_Voip.png',
+        'target': DEPLOY_ASSET_ROOT / 'service-voip.webp',
+        'resize': (SERVICE_VOIP_WIDTH, SERVICE_VOIP_HEIGHT),
+        'format': 'WEBP',
+        'quality': 90,
+    },
+)
+RUNTIME_ASSET_COPIES = (
+    {
+        'source': root / 'Images' / 'source-library' / 'products' / 'Unifi_Bullet_Dual.avif',
+        'target': DEPLOY_ASSET_ROOT / 'service-camera.avif',
     },
 )
 
@@ -292,9 +356,11 @@ T['en'].update({
     'home_intro': 'Opticable helps commercial properties deploy security, entry, wireless, and supporting infrastructure with clean installation and organized turnover.',
     'home_points': [
         'Security camera systems for common areas, perimeters, suites, and operations',
-        'Access control and intercom systems for managed entries',
+        'Access control and intercom systems for lobbies, entrances, and managed properties',
         'Commercial WiFi for offices, retail, and multi-tenant spaces',
-        'Structured cabling, fiber, and network rooms that support those systems',
+        'IP phone systems, VoIP lines, and office handsets for business operations',
+        'Structured cabling and fiber optic links that support those systems',
+        'Network infrastructure, server racks, and telecom rooms for building connectivity',
     ],
     'home_panel': 'Security, entry, WiFi, cabling, and network infrastructure for commercial properties.',
     'trust_title': 'Why Opticable',
@@ -424,9 +490,11 @@ T['fr'].update({
     'home_intro': "Opticable aide les immeubles commerciaux à déployer leurs systèmes de sécurité, de contrôle d'accès, de sans-fil et l'infrastructure qui les soutient, avec une installation soignée et une livraison bien organisée.",
     'home_points': [
         'Caméras de sécurité pour les aires communes, les périmètres, les suites et les zones d’exploitation',
-        "Contrôle d'accès, intercoms et systèmes d'entrée pour immeubles gérés",
+        "Contrôle d'accès et intercoms pour halls, entrées et immeubles gérés",
         'WiFi commercial pour bureaux, commerces et immeubles multilocatifs',
-        'Câblage structuré, fibre optique et locaux réseau pour appuyer ces systèmes',
+        'Téléphonie IP, lignes VoIP et postes de travail pour bureaux et opérations',
+        'Câblage structuré et fibre optique pour appuyer ces systèmes',
+        'Infrastructure réseau, racks et locaux techniques pour la connectivité du bâtiment',
     ],
     'home_panel': "Caméras, accès sécurisés, WiFi, câblage et infrastructure réseau pour les immeubles commerciaux.",
     'trust_title': 'Pourquoi Opticable',
@@ -622,30 +690,66 @@ home_visuals = {
     'en': {
         'eyebrow': 'Installed systems',
         'title': '',
+        'top_title': 'Commercial properties and connected building environments',
+        'top_copy': 'Technology planning and installation for buildings that need security, connectivity, and reliable day-to-day operation.',
+        'top_alt': 'Commercial building exterior with a modern connected technology environment',
         'main_title': 'Network racks, patch panels, and structured cabling',
         'main_copy': 'Clean rack organization, patch panels, backbone, and supporting network infrastructure for commercial properties.',
         'main_alt': 'Commercial network rack with organized structured cabling',
-        'cards': [
-            {'title': 'Structured cabling', 'alt': 'Organized blue patch cabling in a commercial network rack', 'src': HOME_CABLING_URL, 'width': HOME_CABLING_WIDTH, 'height': HOME_CABLING_HEIGHT},
-            {'title': 'Commercial WiFi', 'alt': 'Ceiling mounted commercial WiFi access point', 'src': HOME_WIFI_URL, 'width': HOME_WIFI_WIDTH, 'height': HOME_WIFI_HEIGHT},
-            {'title': 'Intercom', 'alt': 'Commercial intercom door station', 'src': HOME_INTERCOM_URL, 'width': HOME_INTERCOM_WIDTH, 'height': HOME_INTERCOM_HEIGHT},
-            {'title': 'IP cameras', 'alt': 'Dual mount commercial IP security cameras', 'src': HOME_CAMERA_DUAL_URL, 'width': HOME_CAMERA_DUAL_WIDTH, 'height': HOME_CAMERA_DUAL_HEIGHT},
-            {'title': 'IP phones', 'alt': 'Business IP phone and handset', 'src': HOME_PHONE_URL, 'width': HOME_PHONE_WIDTH, 'height': HOME_PHONE_HEIGHT},
-        ],
     },
     'fr': {
         'eyebrow': 'Systèmes installés',
         'title': '',
+        'top_title': 'Immeubles commerciaux et environnements technologiques connectés',
+        'top_copy': "Planification et installation technologique pour les bâtiments qui ont besoin de sécurité, de connectivité et d'une exploitation fiable au quotidien.",
+        'top_alt': 'Immeuble commercial avec environnement technologique moderne et connecté',
         'main_title': 'Racks réseau, patch panels et câblage structuré',
         'main_copy': "Organisation propre des racks, des patch panels, du backbone et de l'infrastructure réseau pour les immeubles commerciaux.",
         'main_alt': 'Baie réseau commerciale avec câblage structuré bien organisé',
-        'cards': [
-            {'title': 'Câblage structuré', 'alt': 'Câblage bleu bien organisé dans un rack réseau commercial', 'src': HOME_CABLING_URL, 'width': HOME_CABLING_WIDTH, 'height': HOME_CABLING_HEIGHT},
-            {'title': 'WiFi commercial', 'alt': "Point d'accès WiFi commercial installé au plafond", 'src': HOME_WIFI_URL, 'width': HOME_WIFI_WIDTH, 'height': HOME_WIFI_HEIGHT},
-            {'title': 'Intercom', 'alt': 'Intercom commercial pour entrée sécurisée', 'src': HOME_INTERCOM_URL, 'width': HOME_INTERCOM_WIDTH, 'height': HOME_INTERCOM_HEIGHT},
-            {'title': 'Caméras IP', 'alt': 'Caméras IP commerciales sur support double', 'src': HOME_CAMERA_DUAL_URL, 'width': HOME_CAMERA_DUAL_WIDTH, 'height': HOME_CAMERA_DUAL_HEIGHT},
-            {'title': 'Téléphonie IP', 'alt': "Téléphone IP d'affaires avec combiné", 'src': HOME_PHONE_URL, 'width': HOME_PHONE_WIDTH, 'height': HOME_PHONE_HEIGHT},
-        ],
+    },
+}
+services_page_chip_keys = (
+    'security-camera-systems',
+    'access-control-systems',
+    'commercial-wifi-installation',
+    'intercom-systems',
+    'structured-cabling',
+    'fiber-optic-installation',
+    'network-infrastructure',
+    'ip-phone-systems',
+)
+service_panel_visuals = {
+    'security-camera-systems': {
+        'en': {'src': SERVICE_CAMERA_URL, 'alt': 'Dual bullet commercial security cameras', 'width': SERVICE_CAMERA_WIDTH, 'height': SERVICE_CAMERA_HEIGHT, 'caption': 'Commercial security camera equipment'},
+        'fr': {'src': SERVICE_CAMERA_URL, 'alt': 'Caméras de sécurité commerciales à double module', 'width': SERVICE_CAMERA_WIDTH, 'height': SERVICE_CAMERA_HEIGHT, 'caption': 'Équipement de caméras de sécurité commerciales'},
+    },
+    'intercom-systems': {
+        'en': {'src': SERVICE_INTERCOM_URL, 'alt': 'Commercial intercom door station installed for building entry', 'width': SERVICE_INTERCOM_WIDTH, 'height': SERVICE_INTERCOM_HEIGHT, 'caption': 'Commercial entry intercom'},
+        'fr': {'src': SERVICE_INTERCOM_URL, 'alt': 'Intercom commercial installé pour entrée d immeuble', 'width': SERVICE_INTERCOM_WIDTH, 'height': SERVICE_INTERCOM_HEIGHT, 'caption': 'Intercom commercial d entrée'},
+    },
+    'structured-cabling': {
+        'en': {'src': SERVICE_CABLING_URL, 'alt': 'Patch panel and switch layout for structured cabling', 'width': SERVICE_CABLING_WIDTH, 'height': SERVICE_CABLING_HEIGHT, 'caption': 'Structured cabling and patch panel layout'},
+        'fr': {'src': SERVICE_CABLING_URL, 'alt': 'Patch panels et commutateurs pour câblage structuré', 'width': SERVICE_CABLING_WIDTH, 'height': SERVICE_CABLING_HEIGHT, 'caption': 'Câblage structuré et organisation des patch panels'},
+    },
+    'fiber-optic-installation': {
+        'en': {'src': SERVICE_FIBER_URL, 'alt': 'Fiber optic cable bundle prepared for commercial installation', 'width': SERVICE_FIBER_WIDTH, 'height': SERVICE_FIBER_HEIGHT, 'caption': 'Fiber optic cabling for commercial connectivity'},
+        'fr': {'src': SERVICE_FIBER_URL, 'alt': 'Câble de fibre optique préparé pour installation commerciale', 'width': SERVICE_FIBER_WIDTH, 'height': SERVICE_FIBER_HEIGHT, 'caption': 'Fibre optique pour connectivité commerciale'},
+    },
+    'network-infrastructure': {
+        'en': {'src': SERVICE_INFRASTRUCTURE_URL, 'alt': 'Commercial network infrastructure with organized rack and switching layout', 'width': SERVICE_INFRASTRUCTURE_WIDTH, 'height': SERVICE_INFRASTRUCTURE_HEIGHT, 'caption': 'Commercial network infrastructure and rack layout'},
+        'fr': {'src': SERVICE_INFRASTRUCTURE_URL, 'alt': 'Infrastructure réseau commerciale avec rack et commutation organisés', 'width': SERVICE_INFRASTRUCTURE_WIDTH, 'height': SERVICE_INFRASTRUCTURE_HEIGHT, 'caption': 'Infrastructure réseau commerciale et organisation de rack'},
+    },
+    'access-control-systems': {
+        'en': {'src': SERVICE_ACCESS_URL, 'alt': 'Commercial access control reader and secure door hardware', 'width': SERVICE_ACCESS_WIDTH, 'height': SERVICE_ACCESS_HEIGHT, 'caption': 'Commercial access reader and secure entry hardware'},
+        'fr': {'src': SERVICE_ACCESS_URL, 'alt': 'Lecteur de contrôle d accès commercial et quincaillerie sécurisée', 'width': SERVICE_ACCESS_WIDTH, 'height': SERVICE_ACCESS_HEIGHT, 'caption': 'Lecteur de contrôle d accès et entrée sécurisée'},
+    },
+    'commercial-wifi-installation': {
+        'en': {'src': SERVICE_WIFI_URL, 'alt': 'Commercial WiFi access point installed on ceiling', 'width': SERVICE_WIFI_WIDTH, 'height': SERVICE_WIFI_HEIGHT, 'caption': 'Commercial WiFi access point', 'class_name': 'service-panel-image-wifi'},
+        'fr': {'src': SERVICE_WIFI_URL, 'alt': 'Point d accès WiFi commercial installé au plafond', 'width': SERVICE_WIFI_WIDTH, 'height': SERVICE_WIFI_HEIGHT, 'caption': 'Point d accès WiFi commercial', 'class_name': 'service-panel-image-wifi'},
+    },
+    'ip-phone-systems': {
+        'en': {'src': SERVICE_VOIP_URL, 'alt': 'Business VoIP phone setup for office communication', 'width': SERVICE_VOIP_WIDTH, 'height': SERVICE_VOIP_HEIGHT, 'caption': 'Business VoIP and IP phone system'},
+        'fr': {'src': SERVICE_VOIP_URL, 'alt': 'Téléphonie VoIP d affaires pour communication de bureau', 'width': SERVICE_VOIP_WIDTH, 'height': SERVICE_VOIP_HEIGHT, 'caption': 'Téléphonie IP et système VoIP d affaires'},
     },
 }
 services = {
@@ -701,10 +805,10 @@ services['structured-cabling']['en']['intro'] = 'Opticable installs the physical
 services['structured-cabling']['fr'].update({
     'name': 'Câblage structuré',
     'title': 'Installation de câblage structuré pour immeubles commerciaux | Opticable',
-    'desc': 'Installation de câblage structuré pour bureaux, immeubles multilocatifs et immeubles commerciaux, incluant Ethernet, coaxial, repérage et cheminements.',
+    'desc': 'Installation de câblage structuré pour bureaux, immeubles multilocatifs et immeubles commerciaux, incluant fibre optique, Cat 5e, Cat 6, Cat 6e, Ethernet, coaxial, repérage et cheminements.',
     'hero': 'Câblage structuré pour bureaux, immeubles et espaces commerciaux.',
-    'intro': "Opticable installe le câblage qui soutient la connectivité d'affaires, les caméras, le WiFi, la téléphonie et les autres systèmes technologiques d'un immeuble.",
-    'summary': 'Câblage cuivre, Ethernet, coaxial, raccordement et organisation soignée pour les espaces commerciaux.',
+    'intro': "Opticable installe le câblage qui soutient la connectivité d'affaires, les caméras, le WiFi, la téléphonie, la fibre optique et les autres systèmes technologiques d'un immeuble, avec des parcours Cat 5e, Cat 6 et Cat 6e adaptés au projet.",
+    'summary': 'Fibre optique, Cat 5e, Cat 6, Cat 6e, Ethernet, coaxial, raccordement et organisation soignée pour les espaces commerciaux.',
     'includes': ["Liens Cat 5e, Cat 6, Cat 6A et Cat 6e pour postes de travail, points d'accès WiFi, caméras, téléphones et équipements d'affaires", 'Câblage coaxial pour services internet, distribution spécialisée et équipements commerciaux', "Panneaux de raccordement, terminaisons, accessoires de cheminement, repérage, essais et remise en ordre de câbles existants"],
     'benefits': ['Infrastructure plus propre et plus simple à entretenir', 'Dépannage plus rapide après la livraison', 'Meilleure marge pour les ajouts, les déménagements et les nouveaux appareils'],
     'cases': ['Aménagements locatifs et agrandissements de bureaux', "Mises à niveau de connectivité dans les commerces et l'hôtellerie", 'Remise en ordre avant un projet de WiFi ou de sécurité'],
@@ -967,6 +1071,34 @@ if (lightbox && lightboxImage && lightboxCaption && lightboxClose) {
     }
   });
 }
+document.querySelectorAll('[data-service-carousel]').forEach((carousel) => {
+  const track = carousel.querySelector('[data-carousel-track]');
+  const prev = carousel.querySelector('[data-carousel-prev]');
+  const next = carousel.querySelector('[data-carousel-next]');
+  if (!track || !prev || !next) {
+    return;
+  }
+  const getStep = () => {
+    const firstCard = track.querySelector('.service-carousel-card');
+    const styles = window.getComputedStyle(track);
+    const gap = parseFloat(styles.columnGap || styles.gap || '0');
+    return (firstCard ? firstCard.getBoundingClientRect().width : track.clientWidth) + gap;
+  };
+  const updateButtons = () => {
+    const maxScroll = Math.max(track.scrollWidth - track.clientWidth - 4, 0);
+    prev.disabled = track.scrollLeft <= 4;
+    next.disabled = track.scrollLeft >= maxScroll;
+  };
+  prev.addEventListener('click', () => {
+    track.scrollBy({ left: -getStep(), behavior: 'smooth' });
+  });
+  next.addEventListener('click', () => {
+    track.scrollBy({ left: getStep(), behavior: 'smooth' });
+  });
+  track.addEventListener('scroll', updateButtons, { passive: true });
+  window.addEventListener('resize', updateButtons);
+  updateButtons();
+});
 document.querySelectorAll('[data-demo-form]').forEach((form) => {
   const note = form.querySelector('[data-form-note]');
   if (!note) return;
@@ -1052,6 +1184,11 @@ main section+section{
 }
 .hero,.page-hero{
   grid-template-columns:minmax(0,1.48fr) minmax(280px,.68fr);
+}
+.hero{
+  align-items:stretch;
+}
+.page-hero{
   align-items:stretch;
 }
 .hero.hero-media-layout{
@@ -1102,6 +1239,18 @@ main section+section{
 .hero-copy,.hero-panel,.page-hero-copy,.page-hero-panel,.contact-panel,.form-panel,.cta-band,.gateway-panel{
   padding:38px;
 }
+.page-hero-copy{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  min-height:100%;
+}
+.page-hero-panel{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  min-height:100%;
+}
 .hero-copy h1{
   max-width:none;
   font-size:clamp(1.58rem,1.95vw,2.3rem);
@@ -1122,6 +1271,16 @@ main section+section{
   font-size:clamp(1.08rem,1.18vw,1.36rem);
   line-height:1.28;
 }
+.service-chip-links .chip{
+  transition:transform .16s ease,background-color .16s ease,border-color .16s ease,color .16s ease;
+}
+.service-chip-links .chip:hover,
+.service-chip-links .chip:focus-visible{
+  transform:translateY(-1px);
+  background:#d6eadf;
+  border-color:rgba(31,102,64,.22);
+  color:var(--primary-dark);
+}
 .hero-media-panel{
   display:grid;
   align-content:start;
@@ -1131,6 +1290,10 @@ main section+section{
 .hero-media-panel h2{
   font-size:clamp(1rem,1.1vw,1.24rem);
   line-height:1.28;
+}
+.hero-media-stack{
+  display:grid;
+  gap:16px;
 }
 .hero-media-main{
   display:grid;
@@ -1156,7 +1319,7 @@ main section+section{
   display:grid;
   gap:4px;
 }
-.hero-media-caption strong,.hero-media-card strong{
+.hero-media-caption strong{
   font-family:"Aptos Display","Segoe UI Variable Display","Segoe UI",sans-serif;
   font-weight:700;
 }
@@ -1169,35 +1332,103 @@ main section+section{
   font-size:.84rem;
   line-height:1.55;
 }
-.hero-media-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(118px,1fr));
-  gap:10px;
+.service-panel-visual{
+  margin:22px 0 0;
 }
-.hero-media-card{
-  display:grid;
-  gap:10px;
-  padding:10px;
-  border:1px solid rgba(47,138,88,.14);
-  border-radius:20px;
-  background:rgba(255,255,255,.88);
-}
-.hero-media-thumb{
-  display:grid;
-  place-items:center;
-  aspect-ratio:1/1;
+.service-panel-frame{
   overflow:hidden;
-  border-radius:16px;
-  background:linear-gradient(180deg,#f5f9f6,#edf3ef);
+  border-radius:20px;
+  background:linear-gradient(180deg,#eff5f0,#e3ece5);
 }
-.hero-media-card-image{
+.service-panel-frame .image-lightbox-trigger{
+  display:block;
+}
+.service-panel-image{
   width:100%;
-  height:100%;
+  height:auto;
+  max-height:320px;
   object-fit:contain;
 }
-.hero-media-card strong{
-  font-size:.8rem;
-  line-height:1.25;
+.about-panel-visual{
+  margin:22px 0 0;
+}
+.about-panel-frame{
+  overflow:hidden;
+  border-radius:20px;
+  background:linear-gradient(180deg,#eff5f0,#e3ece5);
+}
+.about-panel-frame .image-lightbox-trigger{
+  display:block;
+}
+.about-panel-image{
+  width:100%;
+  height:auto;
+  max-height:280px;
+  object-fit:cover;
+}
+.service-panel-image-wifi{
+  max-height:292px;
+}
+.service-carousel{
+  display:grid;
+  gap:20px;
+}
+.service-carousel-header{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:20px;
+}
+.service-carousel-controls{
+  display:flex;
+  gap:10px;
+  flex-shrink:0;
+}
+.service-carousel-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:48px;
+  height:48px;
+  border:1px solid var(--line-strong);
+  border-radius:999px;
+  background:#fff;
+  color:var(--primary-dark);
+  font-size:1.05rem;
+  font-weight:700;
+  transition:transform .16s ease,background-color .16s ease,border-color .16s ease,color .16s ease,opacity .16s ease;
+}
+.service-carousel-button:hover,
+.service-carousel-button:focus-visible{
+  transform:translateY(-1px);
+  background:var(--primary-soft);
+  border-color:rgba(31,102,64,.22);
+}
+.service-carousel-button[disabled]{
+  opacity:.45;
+  cursor:default;
+  transform:none;
+}
+.service-carousel-track{
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns:calc((100% - 40px) / 3);
+  gap:20px;
+  overflow-x:auto;
+  overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+  padding-bottom:4px;
+}
+.service-carousel-track::-webkit-scrollbar{
+  display:none;
+}
+.service-carousel-card{
+  scroll-snap-align:start;
+  height:100%;
+}
+.service-carousel-card.card{
+  height:100%;
 }
 .hero-copy h1,.page-hero-copy h1,.section-heading h2,.cta-band h2,.gateway-panel h1,.hero-panel h2,.page-hero-panel h2{
   font-family:"Aptos Display","Segoe UI Variable Display","Segoe UI",sans-serif;
@@ -1228,8 +1459,20 @@ main section+section{
 }
 .hero-points{
   grid-template-columns:repeat(2,minmax(240px,1fr));
-  gap:10px 20px;
-  margin-top:20px;
+  gap:14px 24px;
+  margin-top:52px;
+}
+.hero-points a{
+  display:inline-block;
+  color:inherit;
+  transition:color .16s ease,transform .16s ease;
+}
+.hero-points a:hover,
+.hero-points a:focus-visible{
+  color:var(--primary-dark);
+  transform:translateX(2px);
+  text-decoration:underline;
+  text-underline-offset:4px;
 }
 .grid-2{
   display:grid;
@@ -1338,11 +1581,7 @@ main section+section{
   transform:scale(1.02);
   filter:saturate(1.04);
 }
-.hero-media-frame .image-lightbox-trigger,
-.hero-media-thumb .image-lightbox-trigger{
-  height:100%;
-}
-.hero-media-thumb .image-lightbox-trigger img{
+.hero-media-frame .image-lightbox-trigger{
   height:100%;
 }
 .lightbox-overlay{
@@ -1431,6 +1670,9 @@ main section+section{
   .hero-points,.grid-2{
     grid-template-columns:1fr;
   }
+  .service-carousel-track{
+    grid-auto-columns:calc((100% - 20px) / 2);
+  }
   .site-nav a,.footer-links a,.footer-services a,.detail-item strong{
     white-space:normal;
   }
@@ -1460,9 +1702,6 @@ main section+section{
     margin:0 0 18px;
     box-shadow:var(--shadow);
   }
-  .hero-media-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
   .lightbox-overlay{
     padding:16px;
   }
@@ -1478,14 +1717,24 @@ main section+section{
     left:22px;
     right:22px;
   }
-  .hero-media-grid{
-    grid-template-columns:1fr;
-  }
   .lightbox-image{
     border-radius:18px;
   }
   .lightbox-caption{
     font-size:.92rem;
+  }
+  .service-carousel-header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .service-carousel-controls{
+    width:100%;
+  }
+  .service-carousel-button{
+    flex:1 1 0;
+  }
+  .service-carousel-track{
+    grid-auto-columns:100%;
   }
 }
 '''
@@ -1534,6 +1783,11 @@ def copy_static_assets():
         if not source.exists():
             continue
         shutil.copy2(source, DEPLOY_ASSET_ROOT / name)
+    for spec in RUNTIME_ASSET_COPIES:
+        source = spec['source']
+        if not source.exists():
+            continue
+        shutil.copy2(source, spec['target'])
 
 
 def remove_legacy_root_build():
@@ -1697,9 +1951,9 @@ def sitemap_xml():
     return '\n'.join(lines) + '\n'
 
 
-def card(title, text, link=None, label='Learn more'):
+def card(title, text, link=None, label='Learn more', cls='card'):
     more = f'<a class="more" href="{link}">{esc(label)}</a>' if link else ''
-    return f'<article class="card"><h3>{esc(title)}</h3><p>{esc(text)}</p>{more}</article>'
+    return f'<article class="{cls}"><h3>{esc(title)}</h3><p>{esc(text)}</p>{more}</article>'
 
 
 def service_cards(lang, label, keys=None):
@@ -1711,19 +1965,113 @@ def render_chips(items):
     return '<div class="chip-list">' + ''.join(f'<span class="chip">{esc(item)}</span>' for item in items) + '</div>'
 
 
+def render_service_chip_links(lang, keys):
+    return '<div class="chip-list service-chip-links">' + ''.join(
+        f'<a class="chip" href="{routes[lang][key]}">{esc(services[key][lang]["name"])}</a>'
+        for key in keys
+    ) + '</div>'
+
+
+def render_home_points(lang):
+    point_keys = (
+        'security-camera-systems',
+        'access-control-systems',
+        'commercial-wifi-installation',
+        'ip-phone-systems',
+        'structured-cabling',
+        'network-infrastructure',
+    )
+    items = []
+    for text, key in zip(T[lang]['home_points'], point_keys):
+        items.append(f'<li><a href="{routes[lang][key]}">{esc(text)}</a></li>')
+    return f'<ul class="hero-points">{"".join(items)}</ul>'
+
+
+def service_panel_media(key, lang):
+    visual = service_panel_visuals.get(key, {}).get(lang)
+    if not visual:
+        return ''
+    image_class = 'service-panel-image'
+    if visual.get('class_name'):
+        image_class += f' {visual["class_name"]}'
+    image = content_img(
+        visual['src'],
+        visual['alt'],
+        visual['width'],
+        visual['height'],
+        image_class,
+        zoomable=True,
+        lang=lang,
+        caption=visual['caption'],
+    )
+    return f'<figure class="service-panel-visual"><div class="service-panel-frame">{image}</div></figure>'
+
+
+def about_panel_media(lang):
+    visual = {
+        'en': {
+            'alt': 'Commercial technology building and connectivity illustration',
+            'caption': 'Commercial technology infrastructure and connectivity',
+        },
+        'fr': {
+            'alt': 'Illustration de bâtiment commercial et de connectivité technologique',
+            'caption': 'Infrastructures technologiques commerciales et connectivité',
+        },
+    }[lang]
+    image = content_img(
+        ABOUT_PANEL_URL,
+        visual['alt'],
+        ABOUT_PANEL_WIDTH,
+        ABOUT_PANEL_HEIGHT,
+        'about-panel-image',
+        eager=True,
+        zoomable=True,
+        lang=lang,
+        caption=visual['caption'],
+    )
+    return f'<figure class="about-panel-visual"><div class="about-panel-frame">{image}</div></figure>'
+
+
+def related_services_carousel(lang, current_key, preferred_keys, label):
+    heading = 'Related services' if lang == 'en' else 'Services connexes'
+    ordered = []
+    for key in [*preferred_keys, *order]:
+        if key == current_key or key in ordered:
+            continue
+        ordered.append(key)
+    cards = ''.join(
+        card(
+            services[key][lang]['name'],
+            services[key][lang]['summary'],
+            routes[lang][key],
+            label,
+            cls='card service-carousel-card',
+        )
+        for key in ordered
+    )
+    ui = CAROUSEL_UI[lang]
+    return (
+        f'<section><div class="service-carousel" data-service-carousel>'
+        f'<div class="service-carousel-header"><div class="section-heading"><p class="eyebrow">{esc(T[lang]["services"])}</p>'
+        f'<h2>{esc(heading)}</h2><p>{esc(T[lang]["related_intro"])}</p></div>'
+        f'<div class="service-carousel-controls"><button class="service-carousel-button" type="button" data-carousel-prev aria-label="{esc(ui["prev"])}">&larr;</button>'
+        f'<button class="service-carousel-button" type="button" data-carousel-next aria-label="{esc(ui["next"])}">&rarr;</button></div></div>'
+        f'<div class="service-carousel-track" data-carousel-track>{cards}</div></div></section>'
+    )
+
+
 def home_visual_panel(lang):
     visual = home_visuals[lang]
     title_html = f'<h2>{esc(visual["title"])}</h2>' if visual['title'] else ''
-    cards = ''.join(
-        f'<article class="hero-media-card"><div class="hero-media-thumb">{content_img(card["src"], card["alt"], card["width"], card["height"], "hero-media-card-image", zoomable=True, lang=lang, caption=card["title"])}</div><strong>{esc(card["title"])}</strong></article>'
-        for card in visual['cards']
-    )
     return (
         f'<aside class="hero-panel hero-media-panel"><p class="eyebrow">{esc(visual["eyebrow"])}</p>'
         f'{title_html}'
+        f'<div class="hero-media-stack">'
+        f'<figure class="hero-media-main"><div class="hero-media-frame">{content_img(HOME_BUILDING_URL, visual["top_alt"], HOME_BUILDING_WIDTH, HOME_BUILDING_HEIGHT, "hero-media-main-image", eager=True, zoomable=True, lang=lang, caption=visual["top_title"])}</div>'
+        f'<figcaption class="hero-media-caption"><strong>{esc(visual["top_title"])}</strong><span>{esc(visual["top_copy"])}</span></figcaption></figure>'
         f'<figure class="hero-media-main"><div class="hero-media-frame">{content_img(HOME_RACK_URL, visual["main_alt"], HOME_RACK_WIDTH, HOME_RACK_HEIGHT, "hero-media-main-image", eager=True, zoomable=True, lang=lang, caption=visual["main_title"])}</div>'
         f'<figcaption class="hero-media-caption"><strong>{esc(visual["main_title"])}</strong><span>{esc(visual["main_copy"])}</span></figcaption></figure>'
-        f'<div class="hero-media-grid">{cards}</div></aside>'
+        f'</div></aside>'
     )
 
 
@@ -1992,7 +2340,7 @@ for lang in ('en', 'fr'):
         f'<h1>{esc(t["home_h1"])}</h1><p>{esc(t["home_intro"])}</p>'
         f'<div class="hero-actions"><a class="button button-primary" href="{routes[lang]["contact"]}">{esc(t["quote"])}</a>'
         f'<a class="button button-secondary" href="{routes[lang]["services"]}">{esc(t["all_services"])}</a></div>'
-        f'<ul class="hero-points">{"".join(f"<li>{esc(item)}</li>" for item in t["home_points"])}</ul></div>'
+        f'{render_home_points(lang)}</div>'
         f'{home_visual_panel(lang)}</section>'
         f'<section><div class="section-heading"><p class="eyebrow">{esc(t["trust_title"])}</p><h2>{esc(t["trust_title"])}</h2><p>{esc(t["company"])}</p></div><div class="grid-4">{"".join(card(a, b) for a, b in t["trust"])}</div></section>'
         f'<section><div class="section-heading"><p class="eyebrow">{esc(t["services"])}</p><h2>{esc(t["priority_title"])}</h2><p>{esc(t["priority_intro"])}</p></div><div class="grid-2">{primary_cards}</div></section>'
@@ -2007,7 +2355,7 @@ for lang in ('en', 'fr'):
         f'{breadcrumb_nav(services_breadcrumbs)}'
         f'<section class="page-hero"><div class="page-hero-copy"><p class="eyebrow">{esc(t["services"])}</p><h1>{esc(t["services_h1"])}</h1><p>{esc(t["services_intro"])}</p>'
         f'<div class="page-hero-actions"><a class="button button-primary" href="{routes[lang]["contact"]}">{esc(t["quote"])}</a><a class="button button-secondary" href="{routes[lang]["about"]}">{esc(t["about"])}</a></div></div>'
-        f'<aside class="page-hero-panel"><p class="eyebrow">{esc(t["tagline"])}</p><h2>{esc(t["company"])}</h2>{render_chips(t["focus_chips"])}</aside></section>'
+        f'<aside class="page-hero-panel"><p class="eyebrow">{esc(t["tagline"])}</p><h2>{esc(t["company"])}</h2>{render_service_chip_links(lang, services_page_chip_keys)}</aside></section>'
         f'<section><div class="section-heading"><p class="eyebrow">{esc(t["services"])}</p><h2>{esc(t["priority_title"])}</h2><p>{esc(t["priority_intro"])}</p></div><div class="grid-2">{primary_cards}</div></section>'
         f'<section><div class="section-heading"><p class="eyebrow">{esc(t["services"])}</p><h2>{esc(t["support_title"])}</h2><p>{esc(t["support_intro"])}</p></div><div class="grid-2">{secondary_cards}</div></section>'
         f'<section><div class="section-heading"><p class="eyebrow">{esc(t["services"])}</p><h2>{esc(t["extra_title"])}</h2><p>{esc(t["extra_intro"])}</p></div><div class="grid-3">{"".join(card(a, b) for a, b in t["extras"])}</div></section>'
@@ -2020,7 +2368,7 @@ for lang in ('en', 'fr'):
         f'{breadcrumb_nav(about_breadcrumbs)}'
         f'<section class="page-hero"><div class="page-hero-copy"><p class="eyebrow">{esc(t["about"])}</p><h1>{esc(t["about_h1"])}</h1><p>{esc(t["about_intro"])}</p>'
         f'<div class="page-hero-actions"><a class="button button-primary" href="{routes[lang]["contact"]}">{esc(t["quote"])}</a><a class="button button-secondary" href="{routes[lang]["services"]}">{esc(t["services"])}</a></div></div>'
-        f'<aside class="page-hero-panel"><p class="eyebrow">{esc(t["tagline"])}</p><h2>{esc(t["about_story"])}</h2>{render_chips(t["focus_chips"])}</aside></section>'
+        f'<aside class="page-hero-panel"><p class="eyebrow">{esc(t["tagline"])}</p><h2>{esc(t["about_story"])}</h2>{about_panel_media(lang)}</aside></section>'
         f'<section><div class="section-heading"><p class="eyebrow">{esc(t["about"])}</p><h2>{esc(t.get("about_section_title", t["about_h1"]))}</h2><p>{esc(t.get("about_section_intro", t["about_story"]))}</p></div><div class="grid-4">{"".join(card(a, b) for a, b in t["about_values"])}</div></section>'
         f'<section><div class="section-heading"><p class="eyebrow">{esc(t["industries"])}</p><h2>{esc(t["clients_title"])}</h2><p>{esc(t["clients_intro"])}</p></div>{clients_section(lang)}</section>'
         f'{cta(lang)}'
@@ -2063,7 +2411,7 @@ for lang in ('en', 'fr'):
         f'{breadcrumb_nav(industries_breadcrumbs)}'
         f'<section class="page-hero"><div class="page-hero-copy"><p class="eyebrow">{esc(t["industries"])}</p><h1>{esc(t["industries_h1"])}</h1><p>{esc(t["industries_intro"])}</p>'
         f'<div class="page-hero-actions"><a class="button button-primary" href="{routes[lang]["contact"]}">{esc(t["quote"])}</a><a class="button button-secondary" href="{routes[lang]["services"]}">{esc(t["services"])}</a></div></div>'
-        f'<aside class="page-hero-panel"><p class="eyebrow">{esc(t["industries"])}</p><h2>{esc(t.get("industries_panel_title", t["company"]))}</h2><p>{esc(t.get("industries_panel_copy", t["industries_intro"]))}</p>{render_chips(t["focus_chips"])}</aside></section>'
+        f'<aside class="page-hero-panel"><p class="eyebrow">{esc(t["industries"])}</p><h2>{esc(t.get("industries_panel_title", t["company"]))}</h2><p>{esc(t.get("industries_panel_copy", t["industries_intro"]))}</p></aside></section>'
         f'<section><div class="section-heading"><p class="eyebrow">{esc(t["industries"])}</p><h2>{esc(t["industries_h1"])}</h2><p>{esc(t["industries_intro"])}</p></div>{industries_section(lang)}</section>'
         f'{coverage_section(lang)}'
         f'{cta(lang)}'
@@ -2074,7 +2422,7 @@ for lang in ('en', 'fr'):
     faq_body = (
         f'{breadcrumb_nav(faq_breadcrumbs)}'
         f'<section class="page-hero"><div class="page-hero-copy"><p class="eyebrow">FAQ</p><h1>{esc(t["faq_h1"])}</h1><p>{esc(t["faq_intro"])}</p></div>'
-        f'<aside class="page-hero-panel"><p class="eyebrow">FAQ</p><h2>{esc(t.get("faq_panel_title", t["faq_h1"]))}</h2><p>{esc(t.get("faq_panel_copy", t["faq_intro"]))}</p>{render_chips(t["focus_chips"])}</aside></section>'
+        f'<aside class="page-hero-panel"><p class="eyebrow">FAQ</p><h2>{esc(t.get("faq_panel_title", t["faq_h1"]))}</h2><p>{esc(t.get("faq_panel_copy", t["faq_intro"]))}</p></aside></section>'
         f'{faq_sections(lang)}'
         f'{cta(lang)}'
     )
@@ -2082,16 +2430,17 @@ for lang in ('en', 'fr'):
 
     for key in order:
         s = services[key][lang]
-        related = ''.join(card(services[r][lang]['name'], services[r][lang]['summary'], routes[lang][r], t['service_label']) for r in s['related'])
+        related = related_services_carousel(lang, key, s['related'], t['service_label'])
         service_breadcrumbs = [(t['home'], routes[lang]['home']), (t['services'], routes[lang]['services']), (s['name'], routes[lang][key])]
+        panel_extra = service_panel_media(key, lang) or render_chips([s["name"], services[s["related"][0]][lang]["name"], services[s["related"][1]][lang]["name"]])
         body = (
             f'{breadcrumb_nav(service_breadcrumbs)}'
             f'<section class="page-hero"><div class="page-hero-copy"><p class="eyebrow">{esc(s["name"])}</p><h1>{esc(s["hero"])}</h1><p>{esc(s["intro"])}</p>'
             f'<div class="page-hero-actions"><a class="button button-primary" href="{routes[lang]["contact"]}">{esc(t["quote"])}</a><a class="button button-secondary" href="{routes[lang]["services"]}">{esc(t["all_services"])}</a></div></div>'
-            f'<aside class="page-hero-panel"><p class="eyebrow">{esc(t["services"])}</p><h2>{esc(s["summary"])}</h2>{render_chips([s["name"], services[s["related"][0]][lang]["name"], services[s["related"][1]][lang]["name"]])}</aside></section>'
+            f'<aside class="page-hero-panel"><p class="eyebrow">{esc(t["services"])}</p><h2>{esc(s["summary"])}</h2>{panel_extra}</aside></section>'
             f'<section><div class="section-heading"><p class="eyebrow">{esc("Service overview" if lang == "en" else "Vue d\'ensemble du service")}</p><h2>{esc(s["name"])}</h2><p>{esc(t["overview_intro"])}</p></div><div class="two-col"><div class="contact-panel service-detail-panel"><p class="eyebrow">{esc("Included work" if lang == "en" else "Travaux inclus")}</p><h2>{esc("What the scope can include" if lang == "en" else "Ce qu\'on peut inclure dans les travaux")}</h2><ul class="check-list">{"".join(f"<li>{esc(item)}</li>" for item in s["includes"])}</ul></div><div class="contact-panel service-detail-panel"><p class="eyebrow">{esc("Benefits" if lang == "en" else "Avantages")}</p><h2>{esc("Benefits" if lang == "en" else "Ce que ce service apporte")}</h2><ul class="check-list">{"".join(f"<li>{esc(item)}</li>" for item in s["benefits"])}</ul></div></div></section>'
             f'<section><div class="section-heading"><p class="eyebrow">{esc("Typical use cases" if lang == "en" else "Exemples concrets")}</p><h2>{esc("Typical use cases" if lang == "en" else "Cas d\'usage")}</h2><p>{esc(s["summary"])}</p></div><div class="two-col"><div class="contact-panel"><ul class="check-list">{"".join(f"<li>{esc(item)}</li>" for item in s["cases"])}</ul></div><div class="contact-panel service-apply-panel"><p class="eyebrow">{esc("Industries served" if lang == "en" else "Types d\'immeubles")}</p><h2>{esc("Industries served" if lang == "en" else "Ou ce service s\'applique")}</h2><ul class="check-list">{"".join(f"<li>{esc(item)}</li>" for item in s["industries"])}</ul></div></div></section>'
-            f'<section><div class="section-heading"><p class="eyebrow">{esc(t["services"])}</p><h2>{esc("Related services" if lang == "en" else "Services connexes")}</h2><p>{esc(t["related_intro"])}</p></div><div class="grid-3">{related}</div></section>'
+            f'{related}'
             f'{cta(lang)}'
         )
         write_url(routes[lang][key], page(lang, key, 'services', s['title'], s['desc'], body, service_name=s['name'], breadcrumb_items=service_breadcrumbs))

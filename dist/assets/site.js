@@ -94,6 +94,34 @@ if (lightbox && lightboxImage && lightboxCaption && lightboxClose) {
     }
   });
 }
+document.querySelectorAll('[data-service-carousel]').forEach((carousel) => {
+  const track = carousel.querySelector('[data-carousel-track]');
+  const prev = carousel.querySelector('[data-carousel-prev]');
+  const next = carousel.querySelector('[data-carousel-next]');
+  if (!track || !prev || !next) {
+    return;
+  }
+  const getStep = () => {
+    const firstCard = track.querySelector('.service-carousel-card');
+    const styles = window.getComputedStyle(track);
+    const gap = parseFloat(styles.columnGap || styles.gap || '0');
+    return (firstCard ? firstCard.getBoundingClientRect().width : track.clientWidth) + gap;
+  };
+  const updateButtons = () => {
+    const maxScroll = Math.max(track.scrollWidth - track.clientWidth - 4, 0);
+    prev.disabled = track.scrollLeft <= 4;
+    next.disabled = track.scrollLeft >= maxScroll;
+  };
+  prev.addEventListener('click', () => {
+    track.scrollBy({ left: -getStep(), behavior: 'smooth' });
+  });
+  next.addEventListener('click', () => {
+    track.scrollBy({ left: getStep(), behavior: 'smooth' });
+  });
+  track.addEventListener('scroll', updateButtons, { passive: true });
+  window.addEventListener('resize', updateButtons);
+  updateButtons();
+});
 document.querySelectorAll('[data-demo-form]').forEach((form) => {
   const note = form.querySelector('[data-form-note]');
   if (!note) return;
