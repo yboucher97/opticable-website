@@ -400,8 +400,8 @@ T['en'].update({
     'thanks_return_home': 'Back to home',
     'thanks_view_services': 'View services',
     'home_title': 'Security Cameras, Access, WiFi and Network | Opticable',
-    'home_desc': 'Opticable installs security cameras, access control, intercoms, commercial WiFi, structured cabling, fiber optics, network infrastructure, and IP phone systems for commercial properties in Quebec.',
-    'home_h1': 'Commercial technology specialists for cameras, secure entry, WiFi, and connected building systems.',
+    'home_desc': 'Opticable installs cameras, access control, intercom, commercial WiFi, and network systems for Quebec commercial properties.',
+    'home_h1': 'Cameras, Access, WiFi and Network for Commercial Properties',
     'home_intro': 'Opticable helps commercial properties deploy security, entry, wireless, and supporting infrastructure with clean installation and organized turnover.',
     'home_points': [
         'Security camera systems for common areas, perimeters, suites, and operations',
@@ -533,9 +533,9 @@ T['fr'].update({
     'success': "Merci, {name}. Votre demande peut maintenant être acheminée vers une boîte courriel ou un CRM en production.",
     'success_generic': "Votre demande peut maintenant être acheminée vers une boîte courriel ou un CRM en production.",
     'home_title': "Caméras, accès, WiFi et réseau commercial | Opticable",
-    'home_desc': "Opticable installe des caméras de sécurité, du contrôle d'accès, des intercoms, du WiFi commercial, du câblage structuré, de la fibre optique et l'infrastructure réseau pour les immeubles commerciaux au Québec.",
+    'home_desc': "Opticable installe caméras, accès, intercom, WiFi commercial et réseau pour immeubles commerciaux au Québec.",
     'home_kicker': 'Technologie commerciale et systèmes du bâtiment',
-    'home_h1': "Des spécialistes des technologies commerciales pour les caméras, le contrôle d'accès, le WiFi et les systèmes de bâtiment connectés.",
+    'home_h1': "Caméras, accès, WiFi et réseau pour immeubles commerciaux",
     'home_intro': "Opticable aide les immeubles commerciaux à déployer leurs systèmes de sécurité, de contrôle d'accès, de sans-fil et l'infrastructure qui les soutient, avec une installation soignée et une livraison bien organisée.",
     'home_points': [
         'Caméras de sécurité pour les aires communes, les périmètres, les suites et les zones d’exploitation',
@@ -2319,11 +2319,7 @@ def icon_link_tags():
 
 
 def stylesheet_link_tags():
-    return (
-        f'<link rel="preload" href="{STYLES_URL}" as="style" />'
-        f'<link rel="stylesheet" href="{STYLES_URL}" media="print" onload="this.media=\'all\'" />'
-        f'<noscript><link rel="stylesheet" href="{STYLES_URL}" /></noscript>'
-    )
+    return f'<link rel="stylesheet" href="{STYLES_URL}" />'
 
 
 def page(lang, key, current, title, desc, body, faq_items=None, service_name=None, breadcrumb_items=None, robots='index, follow', canonical_path=None, include_alternates=True, resource_key=None):
