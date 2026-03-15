@@ -1,8 +1,11 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "opticable-website",
-  "compatibility_date": "2026-03-12",
+  "main": "./worker.js",
+  "compatibility_date": "2026-03-14",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": true
   }
 }

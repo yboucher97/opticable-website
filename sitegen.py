@@ -2,7 +2,7 @@
 import json
 from datetime import date
 import shutil
-from PIL import Image
+from PIL import Image, ImageOps
 
 root = Path(__file__).resolve().parent
 SOURCE_ASSET_ROOT = root / 'assets'
@@ -35,8 +35,11 @@ RBQ_LICENSE_NUMBER = '5864-1648-01'
 LOGO_LOCKUP_URL = f'/assets/opticable-logo.png?v={ASSET_VER}'
 LOGO_UI_URL = f'/assets/logo-ui.webp?v={ASSET_VER}'
 LOGO_MARK_URL = f'/assets/logo-mark.svg?v={ASSET_VER}'
+FAVICON_32_URL = f'/assets/favicon-32.png?v={ASSET_VER}'
+APPLE_TOUCH_ICON_URL = f'/assets/apple-touch-icon.png?v={ASSET_VER}'
 STYLES_URL = f'/assets/styles.css?v={ASSET_VER}'
 SCRIPT_URL = f'/assets/site.js?v={ASSET_VER}'
+WEBMANIFEST_URL = '/site.webmanifest'
 ZOHO_FORM_CONFIG = {
     'fr': {
         'src': 'https://forms.zohopublic.com/opticable/form/Formulairedemandedesoumission/formperma/i6pIlfoGOFER0OCZ4oUH_KMxVWRZKC9Of8vbyNAjR0g',
@@ -65,6 +68,10 @@ LOGO_LOCKUP_WIDTH = 1600
 LOGO_LOCKUP_HEIGHT = 687
 LOGO_UI_WIDTH = 1200
 LOGO_UI_HEIGHT = 515
+FAVICON_32_SIZE = 32
+APPLE_TOUCH_ICON_SIZE = 180
+FAVICON_192_SIZE = 192
+FAVICON_512_SIZE = 512
 HOME_BUILDING_WIDTH = 1800
 HOME_BUILDING_HEIGHT = 1025
 HOME_RACK_WIDTH = 1800
@@ -140,6 +147,34 @@ HOME_IMAGE_EXPORTS = (
         'resize': (LOGO_UI_WIDTH, LOGO_UI_HEIGHT),
         'format': 'WEBP',
         'quality': 90,
+    },
+    {
+        'source': SOURCE_ASSET_ROOT / 'opticable-logo.png',
+        'target': DEPLOY_ASSET_ROOT / 'favicon-32.png',
+        'resize': (FAVICON_32_SIZE, FAVICON_32_SIZE),
+        'canvas': (FAVICON_32_SIZE, FAVICON_32_SIZE),
+        'format': 'PNG',
+    },
+    {
+        'source': SOURCE_ASSET_ROOT / 'opticable-logo.png',
+        'target': DEPLOY_ASSET_ROOT / 'apple-touch-icon.png',
+        'resize': (APPLE_TOUCH_ICON_SIZE, APPLE_TOUCH_ICON_SIZE),
+        'canvas': (APPLE_TOUCH_ICON_SIZE, APPLE_TOUCH_ICON_SIZE),
+        'format': 'PNG',
+    },
+    {
+        'source': SOURCE_ASSET_ROOT / 'opticable-logo.png',
+        'target': DEPLOY_ASSET_ROOT / 'favicon-192.png',
+        'resize': (FAVICON_192_SIZE, FAVICON_192_SIZE),
+        'canvas': (FAVICON_192_SIZE, FAVICON_192_SIZE),
+        'format': 'PNG',
+    },
+    {
+        'source': SOURCE_ASSET_ROOT / 'opticable-logo.png',
+        'target': DEPLOY_ASSET_ROOT / 'favicon-512.png',
+        'resize': (FAVICON_512_SIZE, FAVICON_512_SIZE),
+        'canvas': (FAVICON_512_SIZE, FAVICON_512_SIZE),
+        'format': 'PNG',
     },
     {
         'source': root / 'Images' / 'source-library' / 'ai-generated' / 'gemini-building.png',
@@ -364,8 +399,8 @@ T['en'].update({
     ],
     'thanks_return_home': 'Back to home',
     'thanks_view_services': 'View services',
-    'home_title': 'Commercial Technology Infrastructure Contractor | Cameras, Access Control, WiFi | Opticable',
-    'home_desc': 'Opticable installs security cameras, access control, intercoms, commercial WiFi, structured cabling, fiber optics, network infrastructure, and IP phone systems for commercial properties.',
+    'home_title': 'Security Cameras, Access, WiFi and Network | Opticable',
+    'home_desc': 'Opticable installs security cameras, access control, intercoms, commercial WiFi, structured cabling, fiber optics, network infrastructure, and IP phone systems for commercial properties in Quebec.',
     'home_h1': 'Commercial technology specialists for cameras, secure entry, WiFi, and connected building systems.',
     'home_intro': 'Opticable helps commercial properties deploy security, entry, wireless, and supporting infrastructure with clean installation and organized turnover.',
     'home_points': [
@@ -497,8 +532,8 @@ T['fr'].update({
     'form_note': "Formulaire de démonstration. Reliez-le à une boîte courriel, à un CRM ou à votre outil de formulaires avant la mise en ligne.",
     'success': "Merci, {name}. Votre demande peut maintenant être acheminée vers une boîte courriel ou un CRM en production.",
     'success_generic': "Votre demande peut maintenant être acheminée vers une boîte courriel ou un CRM en production.",
-    'home_title': "Entrepreneur en infrastructures technologiques commerciales | Caméras, contrôle d'accès et WiFi | Opticable",
-    'home_desc': "Opticable installe des caméras de sécurité, du contrôle d'accès, des intercoms, du WiFi commercial, du câblage structuré, de la fibre optique, de l'infrastructure réseau et de la téléphonie IP pour les immeubles commerciaux.",
+    'home_title': "Caméras, accès, WiFi et réseau commercial | Opticable",
+    'home_desc': "Opticable installe des caméras de sécurité, du contrôle d'accès, des intercoms, du WiFi commercial, du câblage structuré, de la fibre optique et l'infrastructure réseau pour les immeubles commerciaux au Québec.",
     'home_kicker': 'Technologie commerciale et systèmes du bâtiment',
     'home_h1': "Des spécialistes des technologies commerciales pour les caméras, le contrôle d'accès, le WiFi et les systèmes de bâtiment connectés.",
     'home_intro': "Opticable aide les immeubles commerciaux à déployer leurs systèmes de sécurité, de contrôle d'accès, de sans-fil et l'infrastructure qui les soutient, avec une installation soignée et une livraison bien organisée.",
@@ -1762,14 +1797,27 @@ def export_image_variant(spec):
     if not source.exists():
         return
     with Image.open(source) as image:
+        if image.mode not in ('RGB', 'RGBA'):
+            image = image.convert('RGBA')
         if spec.get('crop'):
             image = image.crop(spec['crop'])
-        if spec.get('resize'):
+        if spec.get('resize') and spec.get('canvas'):
+            image = ImageOps.contain(image, spec['resize'], IMAGE_RESAMPLING.LANCZOS)
+        elif spec.get('resize'):
             image.thumbnail(spec['resize'], IMAGE_RESAMPLING.LANCZOS)
+        if spec.get('canvas'):
+            background = spec.get('background', (255, 255, 255, 0))
+            canvas = Image.new('RGBA', spec['canvas'], background)
+            offset = ((canvas.width - image.width) // 2, (canvas.height - image.height) // 2)
+            mask = image if 'A' in image.getbands() else None
+            canvas.paste(image, offset, mask)
+            image = canvas
         if spec['format'] == 'JPEG':
             if image.mode != 'RGB':
                 image = image.convert('RGB')
             save_kwargs = {'format': 'JPEG', 'quality': spec['quality'], 'optimize': True, 'progressive': True}
+        elif spec['format'] == 'PNG':
+            save_kwargs = {'format': 'PNG', 'optimize': True}
         else:
             save_kwargs = {'format': 'WEBP', 'quality': spec['quality'], 'method': 6}
         spec['target'].parent.mkdir(parents=True, exist_ok=True)
@@ -1968,6 +2016,26 @@ def sitemap_xml():
             lines.append('  </url>')
     lines.append('</urlset>')
     return '\n'.join(lines) + '\n'
+
+
+def webmanifest_json():
+    return json.dumps(
+        {
+            'name': 'Opticable',
+            'short_name': 'Opticable',
+            'start_url': '/',
+            'scope': '/',
+            'display': 'standalone',
+            'background_color': '#0f1413',
+            'theme_color': '#153628',
+            'icons': [
+                {'src': '/assets/favicon-192.png', 'sizes': '192x192', 'type': 'image/png'},
+                {'src': '/assets/favicon-512.png', 'sizes': '512x512', 'type': 'image/png'},
+            ],
+        },
+        ensure_ascii=False,
+        indent=2,
+    ) + '\n'
 
 
 def card(title, text, link=None, label='Learn more', cls='card'):
@@ -2241,12 +2309,36 @@ def cta(lang):
     return f'<section class="cta-band"><div><p class="eyebrow">{esc(t["cta_kicker"])}</p><h2>{esc(t["cta_title"])}</h2><p>{esc(t["cta_copy"])}</p></div><div class="cta-actions"><a class="button button-primary" href="{routes[lang]["contact"]}">{esc(t["quote"])}</a><a class="button button-secondary" href="{routes[lang]["services"]}">{esc(t["all_services"])}</a></div></section>'
 
 
-def page(lang, key, current, title, desc, body, faq_items=None, service_name=None, breadcrumb_items=None, robots='index, follow'):
+def icon_link_tags():
+    return (
+        f'<link rel="icon" type="image/svg+xml" href="{LOGO_MARK_URL}" />'
+        f'<link rel="icon" type="image/png" sizes="32x32" href="{FAVICON_32_URL}" />'
+        f'<link rel="apple-touch-icon" sizes="180x180" href="{APPLE_TOUCH_ICON_URL}" />'
+        f'<link rel="manifest" href="{WEBMANIFEST_URL}" />'
+    )
+
+
+def stylesheet_link_tags():
+    return (
+        f'<link rel="preload" href="{STYLES_URL}" as="style" />'
+        f'<link rel="stylesheet" href="{STYLES_URL}" media="print" onload="this.media=\'all\'" />'
+        f'<noscript><link rel="stylesheet" href="{STYLES_URL}" /></noscript>'
+    )
+
+
+def page(lang, key, current, title, desc, body, faq_items=None, service_name=None, breadcrumb_items=None, robots='index, follow', canonical_path=None, include_alternates=True, resource_key=None):
     t = T[lang]
-    canonical_url = absolute_url(routes[lang][key])
-    default_url = absolute_url(default_route(key))
+    canonical_url = absolute_url(canonical_path or routes[lang][key])
+    default_url = absolute_url(default_route(key)) if include_alternates else canonical_url
     og_image_url = absolute_url(LOGO_LOCKUP_URL)
-    return f'<!doctype html><html lang="{language_tag(lang)}"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>{esc(title)}</title><meta name="description" content="{esc(desc)}" /><meta name="robots" content="{esc(robots)}" /><meta name="theme-color" content="#153628" /><link rel="canonical" href="{canonical_url}" /><link rel="alternate" hreflang="{language_tag("en")}" href="{absolute_url(routes["en"][key])}" /><link rel="alternate" hreflang="{language_tag("fr")}" href="{absolute_url(routes["fr"][key])}" /><link rel="alternate" hreflang="x-default" href="{default_url}" /><meta property="og:type" content="website" /><meta property="og:site_name" content="Opticable" /><meta property="og:locale" content="{t["locale"]}" /><meta property="og:title" content="{esc(title)}" /><meta property="og:description" content="{esc(desc)}" /><meta property="og:url" content="{canonical_url}" /><meta property="og:image" content="{og_image_url}" /><meta property="og:image:alt" content="Opticable logo" /><meta property="og:image:width" content="{LOGO_LOCKUP_WIDTH}" /><meta property="og:image:height" content="{LOGO_LOCKUP_HEIGHT}" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="{esc(title)}" /><meta name="twitter:description" content="{esc(desc)}" /><meta name="twitter:image" content="{og_image_url}" /><meta name="twitter:image:alt" content="Opticable logo" /><link rel="icon" type="image/svg+xml" href="{LOGO_MARK_URL}" />{resource_hints(key)}<link rel="stylesheet" href="{STYLES_URL}" /><script type="application/ld+json">{schema(lang, key, title, desc, faq_items, service_name, breadcrumb_items)}</script></head><body><a class="skip-link" href="#content">{esc(t["skip"])}</a><div class="site-shell">{header(lang, current, key)}{cookie_banner(lang)}<main id="content">{body}</main>{footer(lang)}</div>{image_lightbox(lang)}<script src="{SCRIPT_URL}" defer></script></body></html>'
+    alternate_tags = ''
+    if include_alternates:
+        alternate_tags = (
+            f'<link rel="alternate" hreflang="{language_tag("en")}" href="{absolute_url(routes["en"][key])}" />'
+            f'<link rel="alternate" hreflang="{language_tag("fr")}" href="{absolute_url(routes["fr"][key])}" />'
+            f'<link rel="alternate" hreflang="x-default" href="{default_url}" />'
+        )
+    return f'<!doctype html><html lang="{language_tag(lang)}"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>{esc(title)}</title><meta name="description" content="{esc(desc)}" /><meta name="robots" content="{esc(robots)}" /><meta name="theme-color" content="#153628" />{icon_link_tags()}<link rel="canonical" href="{canonical_url}" />{alternate_tags}<meta property="og:type" content="website" /><meta property="og:site_name" content="Opticable" /><meta property="og:locale" content="{t["locale"]}" /><meta property="og:title" content="{esc(title)}" /><meta property="og:description" content="{esc(desc)}" /><meta property="og:url" content="{canonical_url}" /><meta property="og:image" content="{og_image_url}" /><meta property="og:image:alt" content="Opticable logo" /><meta property="og:image:width" content="{LOGO_LOCKUP_WIDTH}" /><meta property="og:image:height" content="{LOGO_LOCKUP_HEIGHT}" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="{esc(title)}" /><meta name="twitter:description" content="{esc(desc)}" /><meta name="twitter:image" content="{og_image_url}" /><meta name="twitter:image:alt" content="Opticable logo" />{resource_hints(resource_key or key)}{stylesheet_link_tags()}<script type="application/ld+json">{schema(lang, key, title, desc, faq_items, service_name, breadcrumb_items)}</script></head><body><a class="skip-link" href="#content">{esc(t["skip"])}</a><div class="site-shell">{header(lang, current, key)}{cookie_banner(lang)}<main id="content">{body}</main>{footer(lang)}</div>{image_lightbox(lang)}<script src="{SCRIPT_URL}" defer></script></body></html>'
 
 
 def legacy_redirect_html(target, title, desc, lang='fr'):
@@ -2499,6 +2591,33 @@ for lang in ('en', 'fr'):
         )
         write_url(routes[lang][key], page(lang, key, 'services', s['title'], s['desc'], body, service_name=s['name'], breadcrumb_items=service_breadcrumbs))
 
+not_found_body = (
+    '<section class="page-hero contact-hero"><div class="page-hero-copy">'
+    '<p class="eyebrow">Erreur 404</p>'
+    '<h1>Page introuvable</h1>'
+    '<p>La page demandée n’existe plus, a été déplacée ou l’URL est invalide.</p>'
+    f'<div class="page-hero-actions"><a class="button button-primary" href="{routes["fr"]["home"]}">Retour à l’accueil</a>'
+    f'<a class="button button-secondary" href="{routes["fr"]["services"]}">Voir les services</a></div></div>'
+    '<div class="contact-panel"><p class="eyebrow">Besoin d’aide</p><h2>Parlez-nous de votre projet</h2>'
+    '<p>Si vous cherchiez un service précis, utilisez la page contact pour nous décrire le bâtiment, les systèmes visés ou l’échéancier.</p>'
+    f'<a class="button button-secondary" href="{routes["fr"]["contact"]}">Nous joindre</a></div></section>'
+)
+not_found_html = page(
+    'fr',
+    'home',
+    'home',
+    'Page introuvable | Opticable',
+    "La page demandée est introuvable. Retournez à l’accueil, aux services ou à la page contact d’Opticable.",
+    not_found_body,
+    robots='noindex, follow',
+    canonical_path='/404.html',
+    include_alternates=False,
+    resource_key='404',
+)
+
 write_url('/fr/', legacy_redirect_html('/', 'Redirection vers la page d accueil française', "La page d accueil française est maintenant servie directement à la racine du site.", lang='fr'))
 (DEPLOY_ROOT / 'robots.txt').write_text('User-agent: *\nAllow: /\nDisallow: /.playwright-cli/\nDisallow: /output/\nDisallow: /__pycache__/\nSitemap: ' + absolute_url('/sitemap.xml') + '\n', encoding='utf-8')
 (DEPLOY_ROOT / 'sitemap.xml').write_text(sitemap_xml(), encoding='utf-8')
+(DEPLOY_ROOT / 'site.webmanifest').write_text(webmanifest_json(), encoding='utf-8')
+(DEPLOY_ROOT / 'ads.txt').write_text('# Opticable does not authorize any third-party digital sellers.\n', encoding='utf-8')
+(DEPLOY_ROOT / '404.html').write_text(not_found_html.strip() + '\n', encoding='utf-8')
